@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROSPER PRODUCTION</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080"><rect fill="%23333" width="1920" height="1080"/></svg>');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 50%, rgba(255,255,255,0.05) 0%, transparent 50%);
+        }
+
+        .logo {
+            font-size: 80px;
+            font-weight: 300;
+            letter-spacing: 10px;
+            margin-bottom: 10px;
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            z-index: 1;
+        }
+
+        .company-name {
+            font-size: 48px;
+            font-weight: 400;
+            letter-spacing: 8px;
+            margin-bottom: 5px;
+            font-family: 'Georgia', serif;
+            z-index: 1;
+        }
+
+        .company-subtitle {
+            font-size: 20px;
+            font-weight: 300;
+            letter-spacing: 6px;
+            margin-bottom: 40px;
+            z-index: 1;
+        }
+
+        .tagline {
+            font-size: 16px;
+            letter-spacing: 3px;
+            margin-bottom: 40px;
+            font-weight: 300;
+            z-index: 1;
+        }
+
+        .cta-button {
+            padding: 15px 40px;
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+            font-size: 14px;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            z-index: 1;
+        }
+
+        .cta-button:hover {
+            background: white;
+            color: #333;
+        }
+
+        /* Services Section */
+        .services {
+            padding: 100px 50px;
+            background: #f8f8f8;
+        }
+
+        .services-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 50px;
+        }
+
+        .service-item {
+            text-align: center;
+            padding: 30px;
+            background: white;
+            border-radius: 10px;
+            transition: transform 0.3s;
+        }
+
+        .service-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .service-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+
+        .service-title {
+            font-size: 24px;
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+            font-weight: 400;
+        }
+
+        .service-description {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.8;
+        }
+
+        /* About Section */
+        .about {
+            padding: 100px 50px;
+            background: white;
+            text-align: center;
+        }
+
+        .about-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .est-text {
+            font-size: 36px;
+            margin-bottom: 10px;
+            letter-spacing: 3px;
+        }
+
+        .est-year {
+            font-size: 48px;
+            font-style: italic;
+            margin-bottom: 40px;
+        }
+
+        .about-description {
+            font-size: 16px;
+            line-height: 2;
+            color: #555;
+            margin-bottom: 40px;
+        }
+
+        .learn-more {
+            padding: 12px 35px;
+            background: transparent;
+            border: 2px solid #333;
+            color: #333;
+            font-size: 14px;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .learn-more:hover {
+            background: #333;
+            color: white;
+        }
+
+        /* Portfolio Section */
+        .portfolio {
+            padding: 100px 50px;
+            background: #f8f8f8;
+        }
+
+        .portfolio h2 {
+            text-align: center;
+            font-size: 42px;
+            margin-bottom: 60px;
+            letter-spacing: 3px;
+            font-weight: 400;
+        }
+
+        .portfolio-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .portfolio-item {
+            background: #ddd;
+            aspect-ratio: 16/9;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .portfolio-item iframe {
+            width: 100%;
+            height: 100%;
+        }
+
+        .portfolio-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 18px;
+            letter-spacing: 2px;
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: 100px 50px;
+            background: #2c2c2c;
+            color: white;
+            text-align: center;
+        }
+
+        .contact h2 {
+            font-size: 42px;
+            margin-bottom: 50px;
+            letter-spacing: 3px;
+            font-weight: 400;
+        }
+
+        .contact-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .qr-code {
+            width: 200px;
+            height: 200px;
+            background: white;
+            margin: 0 auto 30px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .contact-info {
+            margin-top: 30px;
+        }
+
+        .contact-name {
+            font-size: 28px;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+        }
+
+        .contact-title {
+            font-size: 14px;
+            letter-spacing: 2px;
+            color: #aaa;
+            margin-bottom: 20px;
+        }
+
+        .contact-details {
+            font-size: 16px;
+            line-height: 2;
+        }
+
+        .contact-details a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .contact-details a:hover {
+            text-decoration: underline;
+        }
+
+        .website-url {
+            margin-top: 30px;
+            font-size: 14px;
+            letter-spacing: 2px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 50px;
+            }
+            
+            .company-name {
+                font-size: 32px;
+            }
+            
+            .company-subtitle {
+                font-size: 16px;
+            }
+            
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .portfolio-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Smooth Scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="logo">PP</div>
+        <h1 class="company-name">PROSPER</h1>
+        <p class="company-subtitle">PRODUCTION</p>
+        <p class="tagline">VIDEO · PICTURE · PLANNING · MARKETING</p>
+        <a href="#contact" class="cta-button">GET IN TOUCH</a>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services">
+        <div class="services-grid">
+            <div class="service-item">
+                <div class="service-icon">🎥</div>
+                <h3 class="service-title">VIDEO</h3>
+                <p class="service-description">Professional video production tailored for your brand.</p>
+            </div>
+            <div class="service-item">
+                <div class="service-icon">📷</div>
+                <h3 class="service-title">PICTURE</h3>
+                <p class="service-description">High-quality photography capturing elegant and impactful visuals.</p>
+            </div>
+            <div class="service-item">
+                <div class="service-icon">📋</div>
+                <h3 class="service-title">PLANNING</h3>
+                <p class="service-description">Strategic project planning and creative concept development.</p>
+            </div>
+            <div class="service-item">
+                <div class="service-icon">📢</div>
+                <h3 class="service-title">MARKETING</h3>
+                <p class="service-description">Targeted marketing solutions to elevate your brand's reach.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about">
+        <div class="about-content">
+            <p class="est-text">EST. <span class="est-year">the</span> 2024</p>
+            <p class="about-description">
+                Founded in 2024, Prosper Production specializes into delivering custom
+                video, picture, planning, and marketing services of the high quality.
+                We bring a refined and professional touch to every project, ensuring
+                that your brand stands out with timeless elegance.
+            </p>
+            <a href="#portfolio" class="learn-more">LEARN MORE</a>
+        </div>
+    </section>
+
+    <!-- Portfolio Section -->
+    <section class="portfolio" id="portfolio">
+        <h2>PORTFOLIO</h2>
+        <div class="portfolio-grid">
+            <!-- 여기에 YouTube 영상 링크를 추가하세요 -->
+            <!-- 예시: <div class="portfolio-item"><iframe src="https://www.youtube.com/embed/VIDEO_ID" frameborder="0" allowfullscreen></iframe></div> -->
+            
+            <div class="portfolio-item">
+                <div class="portfolio-placeholder">Coming Soon</div>
+            </div>
+            <div class="portfolio-item">
+                <div class="portfolio-placeholder">Coming Soon</div>
+            </div>
+            <div class="portfolio-item">
+                <div class="portfolio-placeholder">Coming Soon</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <h2>GET IN TOUCH</h2>
+        <div class="contact-content">
+            <div class="qr-code">
+                QR CODE
+                <!-- 실제 QR 코드 이미지로 교체: <img src="qr-code.png" alt="QR Code" style="width: 100%;"> -->
+            </div>
+            <div class="contact-info">
+                <p class="contact-name">KIM CHANGDAE</p>
+                <p class="contact-title">PROJECT MANAGER</p>
+                <div class="contact-details">
+                    <p>M 010.3440.4318</p>
+                    <p>E <a href="mailto:prosper_production@naver.com">prosper_production@naver.com</a></p>
+                </div>
+                <p class="website-url">PROSPERPRODUCTION.COM</p>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
