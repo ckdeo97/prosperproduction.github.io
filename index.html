@@ -1,1069 +1,333 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PROSPER PRODUCTION | 영상 제작 프로덕션</title>
-    <meta name="description" content="프로스퍼 프로덕션 - 영상, 사진, 기획, 마케팅 전문 프로덕션">
-    <!-- Fullpage.js -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/4.0.20/fullpage.min.css">
-    <!-- EmailJS -->
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
-            color: #333;
-            line-height: 1.8;
-            overflow-x: hidden;
-            scroll-behavior: smooth;
-        }
-
-        html {
-            scroll-snap-type: y mandatory;
-            scroll-behavior: smooth;
-        }
-
-        section {
-            scroll-snap-align: start;
-        }
-
-        /* Navigation */
-        nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            padding: 20px 50px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            transition: all 0.3s ease;
-        }
-
-        nav.scrolled {
-            padding: 15px 50px;
-            background: rgba(255, 255, 255, 1);
-            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
-        }
-
-        nav .nav-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .nav-logo {
-            font-size: 22px;
-            font-weight: 700;
-            letter-spacing: 3px;
-            font-family: 'Georgia', serif;
-            font-style: italic;
-            color: #000;
-        }
-
-        .nav-menu {
-            display: flex;
-            gap: 40px;
-            list-style: none;
-        }
-
-        .nav-menu a {
-            color: #000;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            letter-spacing: 1px;
-            transition: color 0.3s;
-        }
-
-        .nav-menu a:hover {
-            color: #666;
-        }
-
-        /* Hero Section */
-        .hero {
-            height: 100vh;
-            background: #000;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            color: white;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                radial-gradient(circle at 30% 50%, rgba(255,255,255,0.03) 0%, transparent 50%),
-                radial-gradient(circle at 70% 50%, rgba(255,255,255,0.02) 0%, transparent 50%);
-            animation: float 20s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0); }
-            50% { transform: translate(20px, 20px); }
-        }
-
-        .hero-content {
-            z-index: 1;
-            animation: fadeInUp 1s ease-out;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .logo {
-            font-size: 90px;
-            font-weight: 300;
-            letter-spacing: 15px;
-            margin-bottom: 15px;
-            font-family: 'Times New Roman', serif;
-            font-style: italic;
-        }
-
-        .company-name {
-            font-size: 56px;
-            font-weight: 500;
-            letter-spacing: 10px;
-            margin-bottom: 10px;
-            font-family: 'Georgia', serif;
-        }
-
-        .company-subtitle {
-            font-size: 24px;
-            font-weight: 300;
-            letter-spacing: 8px;
-            margin-bottom: 50px;
-        }
-
-        .tagline {
-            font-size: 18px;
-            letter-spacing: 4px;
-            margin-bottom: 50px;
-            font-weight: 300;
-            opacity: 0.7;
-        }
-
-        .cta-button {
-            padding: 18px 50px;
-            background: transparent;
-            border: 2px solid white;
-            color: white;
-            font-size: 14px;
-            letter-spacing: 3px;
-            cursor: pointer;
-            transition: all 0.4s;
-            text-decoration: none;
-            display: inline-block;
-            font-weight: 500;
-        }
-
-        .cta-button:hover {
-            background: white;
-            color: #000;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(255,255,255,0.2);
-        }
-
-        /* Section Title */
-        .section-title {
-            text-align: center;
-            font-size: 42px;
-            margin-bottom: 20px;
-            letter-spacing: 4px;
-            font-weight: 600;
-            color: #000;
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .section-title.animate {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .section-subtitle {
-            text-align: center;
-            font-size: 16px;
-            color: #666;
-            margin-bottom: 60px;
-            letter-spacing: 1px;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-            transition-delay: 0.2s;
-        }
-
-        .section-subtitle.animate {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Services Section */
-        .services {
-            padding: 120px 50px;
-            background: #fff;
-        }
-
-        .services-grid {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 30px;
-        }
-
-        .service-item {
-            text-align: center;
-            padding: 50px 30px;
-            background: #fff;
-            border: 2px solid #000;
-            transition: all 0.4s;
-            opacity: 0;
-            transform: translateY(50px);
-        }
-
-        .service-item.animate {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .service-item:nth-child(1) { transition-delay: 0.1s; }
-        .service-item:nth-child(2) { transition-delay: 0.2s; }
-        .service-item:nth-child(3) { transition-delay: 0.3s; }
-        .service-item:nth-child(4) { transition-delay: 0.4s; }
-
-        .service-item:hover {
-            background: #000;
-            color: #fff;
-            transform: translateY(-5px);
-        }
-
-        .service-item:hover .service-title,
-        .service-item:hover .service-description {
-            color: #fff;
-        }
-
-        .service-icon {
-            font-size: 65px;
-            margin-bottom: 25px;
-        }
-
-        .service-title {
-            font-size: 22px;
-            margin-bottom: 20px;
-            letter-spacing: 3px;
-            font-weight: 600;
-            color: #000;
-            transition: color 0.4s;
-        }
-
-        .service-description {
-            font-size: 14px;
-            color: #666;
-            line-height: 1.8;
-            transition: color 0.4s;
-        }
-
-        /* Process Section */
-        .process {
-            padding: 120px 50px;
-            background: #f8f8f8;
-        }
-
-        .process-timeline {
-            max-width: 1000px;
-            margin: 0 auto;
-            position: relative;
-        }
-
-        .process-timeline::before {
-            content: '';
-            position: absolute;
-            left: 50%;
-            top: 0;
-            bottom: 0;
-            width: 2px;
-            background: #ddd;
-            transform: translateX(-50%);
-        }
-
-        .process-step {
-            display: flex;
-            align-items: center;
-            margin-bottom: 80px;
-            position: relative;
-            opacity: 0;
-            transform: translateX(-50px);
-            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .process-step.animate {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        .process-step:nth-child(even) {
-            transform: translateX(50px);
-        }
-
-        .process-step:nth-child(even).animate {
-            transform: translateX(0);
-        }
-
-        .process-step:nth-child(1) { transition-delay: 0.1s; }
-        .process-step:nth-child(2) { transition-delay: 0.2s; }
-        .process-step:nth-child(3) { transition-delay: 0.3s; }
-        .process-step:nth-child(4) { transition-delay: 0.4s; }
-        .process-step:nth-child(5) { transition-delay: 0.5s; }
-        .process-step:nth-child(6) { transition-delay: 0.6s; }
-
-        .process-step:nth-child(odd) {
-            flex-direction: row;
-        }
-
-        .process-step:nth-child(even) {
-            flex-direction: row-reverse;
-        }
-
-        .process-icon-wrapper {
-            flex: 0 0 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .process-icon {
-            width: 100px;
-            height: 100px;
-            background: #000;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 40px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
-            z-index: 2;
-            position: relative;
-        }
-
-        .process-content {
-            flex: 0 0 50%;
-            padding: 30px;
-        }
-
-        .process-step:nth-child(odd) .process-content {
-            text-align: left;
-        }
-
-        .process-step:nth-child(even) .process-content {
-            text-align: right;
-        }
-
-        .process-step-title {
-            font-size: 24px;
-            margin-bottom: 15px;
-            letter-spacing: 2px;
-            font-weight: 600;
-        }
-
-        .process-step-desc {
-            font-size: 14px;
-            color: #666;
-            line-height: 1.8;
-        }
-
-        /* Portfolio Section */
-        .portfolio {
-            padding: 120px 50px;
-            background: #fff;
-        }
-
-        .portfolio-grid {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 30px;
-        }
-
-        .portfolio-item {
-            position: relative;
-            padding-bottom: 56.25%; /* 16:9 aspect ratio */
-            background: #000;
-            overflow: hidden;
-            cursor: pointer;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            opacity: 0;
-            transform: translateY(50px);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-        }
-
-        .portfolio-item.animate {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .portfolio-item:nth-child(1) { transition-delay: 0.1s; }
-        .portfolio-item:nth-child(2) { transition-delay: 0.2s; }
-        .portfolio-item:nth-child(3) { transition-delay: 0.3s; }
-        .portfolio-item:nth-child(4) { transition-delay: 0.4s; }
-
-        .portfolio-item:hover {
-            transform: translateY(-10px) scale(1.02);
-            z-index: 10;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        }
-
-        .portfolio-item iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .portfolio-item:hover iframe {
-            transform: scale(1.05);
-        }
-
-        .portfolio-placeholder {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #666;
-            font-size: 24px;
-            letter-spacing: 4px;
-            background: #f0f0f0;
-        }
-
-        /* Contact Section */
-        .contact {
-            padding: 120px 50px;
-            background: #1a1a1a;
-        }
-
-        .contact-container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .contact-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 80px;
-            margin-top: 60px;
-        }
-
-        .contact-info {
-            color: white;
-        }
-
-        .contact-name {
-            font-size: 32px;
-            font-weight: 700;
-            letter-spacing: 4px;
-            margin-bottom: 5px;
-        }
-
-        .contact-title {
-            font-size: 14px;
-            letter-spacing: 3px;
-            color: #999;
-            margin-bottom: 50px;
-        }
-
-        .contact-info-group {
-            margin-bottom: 30px;
-        }
-
-        .contact-label {
-            font-size: 12px;
-            letter-spacing: 2px;
-            color: #999;
-            margin-bottom: 10px;
-        }
-
-        .contact-value {
-            font-size: 18px;
-            letter-spacing: 1px;
-        }
-
-        .contact-value a {
-            color: white;
-            text-decoration: none;
-        }
-
-        .contact-form {
-            background: white;
-            padding: 50px;
-        }
-
-        .form-group {
-            margin-bottom: 30px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 10px;
-            font-size: 14px;
-            letter-spacing: 1px;
-            font-weight: 500;
-        }
-
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #ddd;
-            font-size: 14px;
-            transition: border-color 0.3s;
-            font-family: inherit;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #000;
-        }
-
-        .form-group textarea {
-            min-height: 150px;
-            resize: vertical;
-        }
-
-        .submit-button {
-            width: 100%;
-            padding: 18px;
-            background: #000;
-            color: white;
-            border: none;
-            font-size: 14px;
-            letter-spacing: 3px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: 600;
-        }
-
-        .submit-button:hover {
-            background: #333;
-        }
-
-        .submit-button:disabled {
-            background: #999;
-            cursor: not-allowed;
-        }
-
-        /* Footer */
-        footer {
-            background: #000;
-            color: white;
-            text-align: center;
-            padding: 40px 20px;
-            font-size: 12px;
-            letter-spacing: 2px;
-        }
-
-        /* Alert Message */
-        .alert {
-            position: fixed;
-            top: 100px;
-            right: 30px;
-            background: #000;
-            color: white;
-            padding: 20px 30px;
-            border-radius: 5px;
-            opacity: 0;
-            transform: translateX(100%);
-            transition: all 0.3s;
-            z-index: 2000;
-            max-width: 400px;
-        }
-
-        .alert.show {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        .alert.error {
-            background: #d32f2f;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 1024px) {
-            .services-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .portfolio-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .process-timeline::before {
-                left: 30px;
-            }
-
-            .process-step {
-                flex-direction: row !important;
-            }
-
-            .process-icon-wrapper {
-                flex: 0 0 auto;
-                padding: 0 30px;
-            }
-
-            .process-content {
-                text-align: left !important;
-            }
-
-            .contact-grid {
-                grid-template-columns: 1fr;
-                gap: 50px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            nav {
-                padding: 15px 20px;
-            }
-
-            .nav-menu {
-                gap: 20px;
-                font-size: 12px;
-            }
-
-            .logo {
-                font-size: 50px;
-                letter-spacing: 8px;
-            }
-
-            .company-name {
-                font-size: 32px;
-                letter-spacing: 6px;
-            }
-
-            .company-subtitle {
-                font-size: 16px;
-                letter-spacing: 4px;
-            }
-
-            .section-title {
-                font-size: 32px;
-            }
-
-            .services-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .services {
-                padding: 80px 20px;
-            }
-
-            .process {
-                padding: 80px 20px;
-            }
-
-            .portfolio {
-                padding: 80px 20px;
-            }
-
-            .contact {
-                padding: 80px 20px;
-            }
-
-            .contact-form {
-                padding: 30px;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PROSPER PRODUCTION</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Noto+Sans+KR:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+--navy:#1f2a44;
+--navy-deep:#162033;
+--gold:#d6c6a5;
+--light:#f8f8f8;
+--gray:#a0a0a0;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+font-family:'Noto Sans KR',sans-serif;
+background:var(--navy);
+color:#fff;
+overflow-x:hidden;
+}
+
+section{padding:160px 80px;}
+.container{max-width:1400px;margin:auto;}
+
+nav{
+position:fixed;
+width:100%;
+padding:30px 80px;
+z-index:1000;
+transition:0.4s;
+}
+nav.scrolled{
+background:rgba(22,32,51,0.95);
+backdrop-filter:blur(12px);
+}
+
+.nav-inner{
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.logo img{
+height:40px;
+}
+
+.nav-menu{
+display:flex;
+gap:50px;
+list-style:none;
+}
+
+.nav-menu a{
+color:#fff;
+text-decoration:none;
+font-weight:400;
+letter-spacing:1px;
+position:relative;
+}
+
+.nav-menu a:after{
+content:"";
+position:absolute;
+bottom:-6px;
+left:0;
+width:0;
+height:1px;
+background:var(--gold);
+transition:0.3s;
+}
+
+.nav-menu a:hover:after{width:100%;}
+
+/* HERO */
+
+.hero{
+height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+text-align:center;
+background:linear-gradient(135deg,var(--navy),var(--navy-deep));
+position:relative;
+}
+
+.hero-content img{
+width:220px;
+margin-bottom:50px;
+}
+
+.hero h1{
+font-family:'Playfair Display',serif;
+font-size:60px;
+letter-spacing:2px;
+font-weight:600;
+}
+
+.hero p{
+margin-top:30px;
+font-size:20px;
+color:var(--gray);
+}
+
+.cta{
+margin-top:60px;
+display:inline-block;
+padding:18px 60px;
+border:1px solid var(--gold);
+color:var(--gold);
+text-decoration:none;
+letter-spacing:2px;
+transition:0.3s;
+}
+
+.cta:hover{
+background:var(--gold);
+color:var(--navy);
+}
+
+/* SECTION LIGHT */
+
+.light-section{
+background:#fff;
+color:#111;
+}
+
+.section-title{
+font-family:'Playfair Display',serif;
+font-size:48px;
+margin-bottom:25px;
+}
+
+.section-sub{
+color:#777;
+margin-bottom:90px;
+}
+
+/* SERVICES */
+
+.services-grid{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:50px;
+}
+
+.service{
+padding:60px;
+background:#fff;
+box-shadow:0 30px 80px rgba(0,0,0,0.06);
+transition:0.4s;
+}
+
+.service:hover{
+transform:translateY(-12px);
+box-shadow:0 50px 120px rgba(0,0,0,0.15);
+}
+
+.service h3{
+font-size:20px;
+margin-bottom:20px;
+font-weight:600;
+}
+
+.service p{
+color:#666;
+}
+
+/* PORTFOLIO */
+
+.portfolio-grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:50px;
+}
+
+.portfolio-item{
+position:relative;
+padding-bottom:56.25%;
+overflow:hidden;
+border-radius:10px;
+box-shadow:0 30px 80px rgba(0,0,0,0.15);
+}
+
+.portfolio-item iframe{
+position:absolute;
+top:0;left:0;width:100%;height:100%;border:none;
+}
+
+/* CONTACT */
+
+.contact{
+background:var(--navy-deep);
+}
+
+.contact-grid{
+display:grid;
+grid-template-columns:1.2fr 1fr;
+gap:120px;
+}
+
+.contact-form{
+background:#fff;
+padding:80px;
+border-radius:8px;
+color:#111;
+}
+
+.contact-form input,
+.contact-form textarea{
+width:100%;
+padding:18px;
+margin-bottom:25px;
+border:1px solid #ddd;
+font-family:inherit;
+}
+
+.contact-form button{
+width:100%;
+padding:20px;
+background:var(--navy);
+color:#fff;
+border:none;
+font-weight:600;
+cursor:pointer;
+}
+
+footer{
+text-align:center;
+padding:60px;
+background:var(--navy);
+font-size:14px;
+color:#aaa;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1200px){
+.services-grid{grid-template-columns:repeat(2,1fr);}
+.portfolio-grid{grid-template-columns:1fr;}
+.contact-grid{grid-template-columns:1fr;}
+}
+
+@media(max-width:768px){
+section{padding:120px 30px;}
+.hero h1{font-size:36px;}
+}
+</style>
 </head>
+
 <body>
-    <!-- Navigation -->
-    <nav>
-        <div class="nav-container">
-            <div class="nav-logo">PROSPER</div>
-            <ul class="nav-menu">
-                <li><a href="#services">SERVICES</a></li>
-                <li><a href="#portfolio">PORTFOLIO</a></li>
-                <li><a href="#contact">CONTACT</a></li>
-            </ul>
-        </div>
-    </nav>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content">
-            <div class="logo">P</div>
-            <h1 class="company-name">PROSPER</h1>
-            <p class="company-subtitle">PRODUCTION</p>
-            <p class="tagline">영상 · 사진 · 기획 · 마케팅</p>
-            <a href="#contact" class="cta-button">프로젝트 문의하기</a>
-        </div>
-    </section>
+<nav>
+<div class="nav-inner container">
+<div class="logo">
+<img src="assets/logo.png" alt="PROSPER">
+</div>
+<ul class="nav-menu">
+<li><a href="#services">SERVICES</a></li>
+<li><a href="#portfolio">PORTFOLIO</a></li>
+<li><a href="#contact">CONTACT</a></li>
+</ul>
+</div>
+</nav>
 
-    <!-- Services Section -->
-    <section class="services" id="services">
-        <h2 class="section-title">SERVICES</h2>
-        <p class="section-subtitle">프로스퍼 프로덕션이 제공하는 전문 서비스</p>
-        <div class="services-grid">
-            <div class="service-item">
-                <div class="service-icon">🎬</div>
-                <h3 class="service-title">영상 제작</h3>
-                <p class="service-description">브랜드 필름, 광고, 홍보 영상 등<br>모든 종류의 영상 콘텐츠 제작</p>
-            </div>
-            
-            <div class="service-item">
-                <div class="service-icon">📷</div>
-                <h3 class="service-title">사진 촬영</h3>
-                <p class="service-description">제품, 인물, 공간 등<br>전문 상업 사진 촬영 서비스</p>
-            </div>
-            
-            <div class="service-item">
-                <div class="service-icon">💡</div>
-                <h3 class="service-title">콘텐츠 기획</h3>
-                <p class="service-description">브랜드 스토리텔링부터<br>캠페인 기획까지</p>
-            </div>
-            
-            <div class="service-item">
-                <div class="service-icon">📊</div>
-                <h3 class="service-title">마케팅</h3>
-                <p class="service-description">SNS 관리, 광고 운영 등<br>종합 디지털 마케팅</p>
-            </div>
-        </div>
-    </section>
+<section class="hero">
+<div class="hero-content">
+<img src="assets/logo.png" alt="PROSPER LOGO">
+<h1>PROSPER PRODUCTION</h1>
+<p>Luxury Visual & Brand Film Studio</p>
+<a href="#contact" class="cta">PROJECT INQUIRY</a>
+</div>
+</section>
 
-    <!-- Process Section -->
-    <section class="process">
-        <h2 class="section-title">WORK PROCESS</h2>
-        <p class="section-subtitle">체계적인 프로세스로 최상의 결과를 만들어냅니다</p>
-        <div class="process-timeline">
-            <div class="process-step">
-                <div class="process-icon-wrapper">
-                    <div class="process-icon">💬</div>
-                </div>
-                <div class="process-content">
-                    <h3 class="process-step-title">상담 & 기획</h3>
-                    <p class="process-step-desc">클라이언트의 니즈를 정확히 파악하고 최적의 솔루션을 제안합니다</p>
-                </div>
-            </div>
-            
-            <div class="process-step">
-                <div class="process-icon-wrapper">
-                    <div class="process-icon">📝</div>
-                </div>
-                <div class="process-content">
-                    <h3 class="process-step-title">제작 준비</h3>
-                    <p class="process-step-desc">콘티, 스토리보드 작성 및 촬영 일정 조율을 진행합니다</p>
-                </div>
-            </div>
-            
-            <div class="process-step">
-                <div class="process-icon-wrapper">
-                    <div class="process-icon">🎬</div>
-                </div>
-                <div class="process-content">
-                    <h3 class="process-step-title">촬영 & 제작</h3>
-                    <p class="process-step-desc">전문 장비와 숙련된 스태프로 고퀄리티 영상을 촬영합니다</p>
-                </div>
-            </div>
-            
-            <div class="process-step">
-                <div class="process-icon-wrapper">
-                    <div class="process-icon">✂️</div>
-                </div>
-                <div class="process-content">
-                    <h3 class="process-step-title">편집 & 후반작업</h3>
-                    <p class="process-step-desc">편집, 색보정, 사운드 디자인 등 완성도 높은 후반작업을 진행합니다</p>
-                </div>
-            </div>
-            
-            <div class="process-step">
-                <div class="process-icon-wrapper">
-                    <div class="process-icon">🔍</div>
-                </div>
-                <div class="process-content">
-                    <h3 class="process-step-title">검수 & 수정</h3>
-                    <p class="process-step-desc">클라이언트 피드백을 반영하여 완벽한 결과물을 완성합니다</p>
-                </div>
-            </div>
-            
-            <div class="process-step">
-                <div class="process-icon-wrapper">
-                    <div class="process-icon">✅</div>
-                </div>
-                <div class="process-content">
-                    <h3 class="process-step-title">최종 납품</h3>
-                    <p class="process-step-desc">원하시는 포맷으로 제작물을 납품하고 사후 관리를 제공합니다</p>
-                </div>
-            </div>
-        </div>
-    </section>
+<section id="services" class="light-section">
+<div class="container">
+<h2 class="section-title">Services</h2>
+<p class="section-sub">전략부터 제작까지 통합 비주얼 솔루션</p>
+<div class="services-grid">
+<div class="service"><h3>Brand Film</h3><p>브랜드의 가치를 영상으로 표현합니다.</p></div>
+<div class="service"><h3>Commercial</h3><p>고급 광고 영상 및 캠페인 제작.</p></div>
+<div class="service"><h3>Creative Planning</h3><p>콘텐츠 전략 및 브랜딩 기획.</p></div>
+<div class="service"><h3>Marketing</h3><p>디지털 퍼포먼스 운영 및 광고 집행.</p></div>
+</div>
+</div>
+</section>
 
-    <!-- Portfolio Section -->
-    <section class="portfolio" id="portfolio">
-        <h2 class="section-title">PORTFOLIO</h2>
-        <p class="section-subtitle">프로스퍼 프로덕션의 작업물을 확인해보세요</p>
-        <div class="portfolio-grid">
-            <div class="portfolio-item">
-                <iframe 
-                    src="https://player.vimeo.com/video/1163933222?badge=0&autopause=0&player_id=0&app_id=58479" 
-                    frameborder="0" 
-                    allow="autoplay; fullscreen; picture-in-picture; clipboard-write" 
-                    allowfullscreen
-                    title="Portfolio 1">
-                </iframe>
-            </div>
-            
-            <div class="portfolio-item">
-                <iframe 
-                    src="https://player.vimeo.com/video/1163933402?badge=0&autopause=0&player_id=0&app_id=58479" 
-                    frameborder="0" 
-                    allow="autoplay; fullscreen; picture-in-picture; clipboard-write" 
-                    allowfullscreen
-                    title="Portfolio 2">
-                </iframe>
-            </div>
-            
-            <div class="portfolio-item">
-                <iframe 
-                    src="https://player.vimeo.com/video/1163933341?badge=0&autopause=0&player_id=0&app_id=58479" 
-                    frameborder="0" 
-                    allow="autoplay; fullscreen; picture-in-picture; clipboard-write" 
-                    allowfullscreen
-                    title="Portfolio 3">
-                </iframe>
-            </div>
-            
-            <div class="portfolio-item">
-                <iframe 
-                    src="https://player.vimeo.com/video/1163933252?badge=0&autopause=0&player_id=0&app_id=58479" 
-                    frameborder="0" 
-                    allow="autoplay; fullscreen; picture-in-picture; clipboard-write" 
-                    allowfullscreen
-                    title="Portfolio 4">
-                </iframe>
-            </div>
-        </div>
-    </section>
+<section id="portfolio" class="light-section">
+<div class="container">
+<h2 class="section-title">Portfolio</h2>
+<div class="portfolio-grid">
+<div class="portfolio-item"><iframe src="https://player.vimeo.com/video/1163933222" allowfullscreen></iframe></div>
+<div class="portfolio-item"><iframe src="https://player.vimeo.com/video/1163933402" allowfullscreen></iframe></div>
+</div>
+</div>
+</section>
 
-    <!-- Contact Section -->
-    <section class="contact" id="contact">
-        <div class="contact-container">
-            <h2 class="section-title" style="color: white;">프로젝트 문의</h2>
-            <p class="section-subtitle" style="color: #999;">언제든지 편하게 연락주세요</p>
-            
-            <div class="contact-grid">
-                <!-- Contact Form -->
-                <div class="contact-form" style="grid-column: 1 / -1; max-width: 600px; margin: 0 auto;">
-                    <form id="contactForm">
-                        <div class="form-group">
-                            <label for="name">이름 / 회사명 *</label>
-                            <input type="text" id="name" name="name" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="email">이메일 *</label>
-                            <input type="email" id="email" name="email" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="phone">연락처</label>
-                            <input type="tel" id="phone" name="phone">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="message">문의 내용 *</label>
-                            <textarea id="message" name="message" required></textarea>
-                        </div>
-                        
-                        <button type="submit" class="submit-button" id="submitBtn">문의하기</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </section>
+<section id="contact" class="contact">
+<div class="container">
+<h2 class="section-title">Contact</h2>
+<div class="contact-grid">
+<div>
+<p style="margin-top:40px;color:#aaa;">prosper@company.com<br>+82 10-0000-0000</p>
+</div>
+<div class="contact-form">
+<input type="text" placeholder="이름 / 회사명">
+<input type="email" placeholder="이메일">
+<textarea placeholder="프로젝트 내용을 작성해주세요"></textarea>
+<button>문의하기</button>
+</div>
+</div>
+</div>
+</section>
 
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2024 PROSPER PRODUCTION. All Rights Reserved.</p>
-    </footer>
+<footer>
+© 2026 PROSPER PRODUCTION
+</footer>
 
-    <!-- Alert Message -->
-    <div class="alert" id="alert"></div>
+<script>
+window.addEventListener('scroll',()=>{
+const nav=document.querySelector('nav');
+if(window.scrollY>80){nav.classList.add('scrolled')}
+else{nav.classList.remove('scrolled')}
+});
+</script>
 
-    <script>
-        // Intersection Observer for scroll animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -100px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('animate');
-                }
-            });
-        }, observerOptions);
-
-        // Observe all elements that need animation
-        document.addEventListener('DOMContentLoaded', () => {
-            const elementsToAnimate = document.querySelectorAll('.section-title, .section-subtitle, .service-item, .process-step, .portfolio-item');
-            elementsToAnimate.forEach(el => observer.observe(el));
-        });
-
-        // Navigation scroll effect
-        let lastScroll = 0;
-        window.addEventListener('scroll', () => {
-            const currentScroll = window.pageYOffset;
-            const nav = document.querySelector('nav');
-            
-            if (currentScroll > 100) {
-                nav.classList.add('scrolled');
-            } else {
-                nav.classList.remove('scrolled');
-            }
-            
-            lastScroll = currentScroll;
-        });
-
-        // Parallax effect for hero section
-        window.addEventListener('scroll', () => {
-            const scrolled = window.pageYOffset;
-            const hero = document.querySelector('.hero-content');
-            if (hero) {
-                hero.style.transform = `translateY(${scrolled * 0.5}px)`;
-                hero.style.opacity = 1 - (scrolled / 700);
-            }
-        });
-
-        // Smooth scroll snap behavior
-        let isScrolling;
-        window.addEventListener('scroll', () => {
-            window.clearTimeout(isScrolling);
-            isScrolling = setTimeout(() => {
-                // Scroll has stopped
-            }, 100);
-        });
-
-        // EmailJS 초기화 (나중에 설정할 수 있도록 주석 처리)
-        // EmailJS 사용법:
-        // 1. https://www.emailjs.com 에서 무료 계정 생성
-        // 2. Email Service 연결 (Gmail, Outlook 등)
-        // 3. Email Template 생성
-        // 4. 아래 코드의 YOUR_PUBLIC_KEY, YOUR_SERVICE_ID, YOUR_TEMPLATE_ID를 실제 값으로 교체
-
-        /*
-        (function() {
-            emailjs.init("YOUR_PUBLIC_KEY");
-        })();
-        */
-
-        // Alert 메시지 표시 함수
-        function showAlert(message, isError = false) {
-            const alert = document.getElementById('alert');
-            alert.textContent = message;
-            alert.className = 'alert show' + (isError ? ' error' : '');
-            
-            setTimeout(() => {
-                alert.classList.remove('show');
-            }, 4000);
-        }
-
-        // 폼 제출 처리
-        document.getElementById('contactForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const submitBtn = document.getElementById('submitBtn');
-            const formData = {
-                name: document.getElementById('name').value,
-                email: document.getElementById('email').value,
-                phone: document.getElementById('phone').value,
-                message: document.getElementById('message').value
-            };
-
-            // 버튼 비활성화
-            submitBtn.disabled = true;
-            submitBtn.textContent = '전송 중...';
-
-            // EmailJS 설정이 완료되면 아래 주석을 해제하세요
-            /*
-            emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
-                from_name: formData.name,
-                from_email: formData.email,
-                phone: formData.phone,
-                message: formData.message,
-                to_email: "prosper@prosperproduction.com"
-            })
-            .then(function(response) {
-                console.log('SUCCESS!', response.status, response.text);
-                showAlert('문의해 주셔서 감사합니다. 빠른 시일 내에 연락드리겠습니다.');
-                document.getElementById('contactForm').reset();
-            }, function(error) {
-                console.log('FAILED...', error);
-                showAlert('전송에 실패했습니다. 직접 이메일로 연락 주시기 바랍니다.', true);
-            })
-            .finally(function() {
-                submitBtn.disabled = false;
-                submitBtn.textContent = '문의하기';
-            });
-            */
-
-            // EmailJS 설정 전 임시 동작
-            setTimeout(() => {
-                showAlert('문의해 주셔서 감사합니다. 빠른 시일 내에 연락드리겠습니다.');
-                document.getElementById('contactForm').reset();
-                submitBtn.disabled = false;
-                submitBtn.textContent = '문의하기';
-            }, 1000);
-        });
-
-        // 부드러운 스크롤
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-    </script>
 </body>
 </html>
