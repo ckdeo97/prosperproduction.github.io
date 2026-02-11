@@ -1,88 +1,306 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PROSPER PRODUCTION</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prosper Production | Cinematic Video Production</title>
+  <meta name="description" content="We craft legacies through cinematic storytelling. Premium video production for brands that demand excellence.">
+  <meta property="og:title" content="Prosper Production">
+  <meta property="og:description" content="We Craft Legacies — Cinematic Storytelling for Timeless Brands">
+  <meta property="og:image" content="assets/images/logo_main.png">
+  <meta name="theme-color" content="#0A0E14">
 
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <!-- Lenis Smooth Scroll -->
+  <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
+
+  <!-- GSAP + ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css">
 </head>
-
 <body>
 
-<div class="cursor"></div>
+  <!-- ============================================
+       CUSTOM CURSOR
+       ============================================ -->
+  <div id="cursor-dot" class="cursor-dot"></div>
+  <div id="cursor-ring" class="cursor-ring"></div>
 
-<nav>
-<img src="assets/typologo_white.png">
-<div class="nav-links">
-<a href="#services">Services</a>
-<a href="#portfolio">Portfolio</a>
-<a href="#contact">Contact</a>
-</div>
-</nav>
+  <!-- ============================================
+       PRELOADER
+       ============================================ -->
+  <div id="preloader" class="preloader">
+    <div class="preloader__curtain preloader__curtain--left"></div>
+    <div class="preloader__curtain preloader__curtain--right"></div>
+    <div class="preloader__content">
+      <svg class="preloader__logo" width="160" height="200" viewBox="0 0 160 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path class="logo-path logo-path--1" d="M40 180 L40 40 C40 20 60 10 80 10 C100 10 120 20 120 40 C120 60 100 75 80 75 L40 75" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <path class="logo-path logo-path--2" d="M60 180 L60 75 C60 75 80 75 95 75 C115 75 135 85 135 105 C135 125 115 140 95 140 L60 140" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <path class="logo-path logo-path--3" d="M120 40 C130 30 140 35 135 45 C130 55 115 50 120 40" stroke="#D4AF37" stroke-width="1" stroke-linecap="round" fill="none"/>
+      </svg>
+      <div class="preloader__text">
+        <p class="preloader__brand">PROSPER</p>
+        <p class="preloader__sub">PRODUCTION</p>
+      </div>
+    </div>
+  </div>
 
-<section class="hero">
-<img src="assets/logo_white.png">
-</section>
+  <!-- ============================================
+       NAVBAR
+       ============================================ -->
+  <nav id="navbar" class="navbar">
+    <a href="#" class="navbar__logo" data-cursor-hover>
+      <img src="assets/images/logo_main.png" alt="Prosper Production" width="50" height="50">
+    </a>
+    <div class="navbar__links">
+      <a href="#works" class="nav-link gold-line" data-cursor-hover>Works</a>
+      <a href="#about" class="nav-link gold-line" data-cursor-hover>About</a>
+      <a href="#reel" class="nav-link gold-line" data-cursor-hover>Reel</a>
+      <a href="#contact" class="nav-link gold-line" data-cursor-hover>Contact</a>
+    </div>
+    <button id="menu-toggle" class="navbar__menu-btn" data-cursor-hover>
+      <span class="menu-line menu-line--1"></span>
+      <span class="menu-line menu-line--2"></span>
+      <span class="menu-line menu-line--3"></span>
+    </button>
+  </nav>
 
-<section id="services" class="light">
-<h2>Services</h2>
-<div class="services-grid">
-<div class="service">Brand Film</div>
-<div class="service">Commercial</div>
-<div class="service">Creative Planning</div>
-<div class="service">Marketing</div>
-</div>
-</section>
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="mobile-menu">
+    <a href="#works" class="mobile-menu__link" data-cursor-hover>Works</a>
+    <a href="#about" class="mobile-menu__link" data-cursor-hover>About</a>
+    <a href="#reel" class="mobile-menu__link" data-cursor-hover>Reel</a>
+    <a href="#contact" class="mobile-menu__link" data-cursor-hover>Contact</a>
+  </div>
 
-<section id="portfolio" class="light">
-<h2>Portfolio</h2>
-<div class="portfolio-grid">
+  <!-- ============================================
+       HERO SECTION
+       ============================================ -->
+  <section id="hero" class="hero">
+    <!-- Video BG (uncomment when video is ready) -->
+    <!--
+    <video class="hero__video" autoplay muted loop playsinline>
+      <source src="assets/videos/hero-reel.mp4" type="video/mp4">
+    </video>
+    -->
+    <div class="hero__bg-gradient"></div>
+    <div class="hero__overlay"></div>
 
-<div class="portfolio-card" data-video="1163933222">
-<div class="thumb" style="background-image:url('https://vumbnail.com/1163933222.jpg')">
-<div class="play-btn">▶</div>
-</div>
-</div>
+    <!-- Side gold lines -->
+    <div class="hero__line hero__line--left"></div>
+    <div class="hero__line hero__line--right"></div>
 
-<div class="portfolio-card" data-video="1163933402">
-<div class="thumb" style="background-image:url('https://vumbnail.com/1163933402.jpg')">
-<div class="play-btn">▶</div>
-</div>
-</div>
+    <div class="hero__content">
+      <p class="hero__label">Prosper Production</p>
+      <h1 class="hero__headline">
+        <span class="hero-word">WE</span>
+        <span class="hero-word">CRAFT</span>
+        <span class="hero-word">LEGACIES</span>
+      </h1>
+      <p class="hero__sub">
+        <span class="sub-word">Cinematic</span>
+        <span class="sub-word">Storytelling</span>
+        <span class="sub-word">for</span>
+        <span class="sub-word">Timeless</span>
+        <span class="sub-word">Brands</span>
+      </p>
+      <div class="hero__divider"></div>
+    </div>
 
-<div class="portfolio-card" data-video="1163933341">
-<div class="thumb" style="background-image:url('https://vumbnail.com/1163933341.jpg')">
-<div class="play-btn">▶</div>
-</div>
-</div>
+    <div class="hero__scroll">
+      <span>Scroll</span>
+      <div class="hero__scroll-arrow">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </div>
+    </div>
+  </section>
 
-<div class="portfolio-card" data-video="1163933252">
-<div class="thumb" style="background-image:url('https://vumbnail.com/1163933252.jpg')">
-<div class="play-btn">▶</div>
-</div>
-</div>
+  <!-- ============================================
+       ABOUT SECTION
+       ============================================ -->
+  <section id="about" class="about">
+    <span class="section-label" data-animate="fade">01 — ABOUT</span>
+    <div class="about__grid">
+      <div class="about__left" data-animate="slide-up">
+        <h2 class="about__heading">
+          Every frame is a <span class="text-gold">promise</span>,<br>
+          every story a <span class="text-gold">legacy</span>.
+        </h2>
+      </div>
+      <div class="about__right">
+        <div class="about__line" data-animate="line"></div>
+        <p class="about__text" data-animate="slide-up" data-delay="0.2">
+          Prosper Production은 브랜드의 본질을 시네마틱 영상으로 담아냅니다.
+          우리는 단순한 영상을 만들지 않습니다. 시간이 지나도 빛나는 이야기를,
+          보는 이의 마음에 남는 유산을 만듭니다.
+        </p>
+        <p class="about__text" data-animate="slide-up" data-delay="0.4">
+          기업 브랜드 필름부터 프리미엄 프로모션 영상까지, 
+          모든 프로젝트에 최고의 퀄리티와 진정성을 담습니다.
+        </p>
+        <div class="about__stats" data-animate="slide-up" data-delay="0.6">
+          <div class="stat">
+            <span class="stat__number">150+</span>
+            <span class="stat__label">Projects</span>
+          </div>
+          <div class="stat">
+            <span class="stat__number">10+</span>
+            <span class="stat__label">Years</span>
+          </div>
+          <div class="stat">
+            <span class="stat__number">50+</span>
+            <span class="stat__label">Clients</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-</div>
-</section>
+  <!-- ============================================
+       WORKS / PORTFOLIO SECTION
+       ============================================ -->
+  <section id="works" class="works">
+    <span class="section-label" data-animate="fade">02 — SELECTED WORKS</span>
 
-<section id="contact" class="light">
-<h2>Contact</h2>
-<form style="max-width:600px">
-<input placeholder="이름" style="width:100%;padding:15px;margin-bottom:20px">
-<input placeholder="이메일" style="width:100%;padding:15px;margin-bottom:20px">
-<textarea placeholder="프로젝트 내용" style="width:100%;padding:15px;height:150px"></textarea>
-</form>
-</section>
+    <div class="works__list" id="works-list">
+      <!-- Floating thumbnail -->
+      <div class="works__thumbnail" id="works-thumbnail">
+        <div class="works__thumb-inner" id="thumb-inner"></div>
+      </div>
 
-<div class="modal">
-<iframe frameborder="0" allow="autoplay; fullscreen"></iframe>
-</div>
+      <div class="works__item" data-animate="slide-up" data-category="Brand Film" data-year="2024" data-color="rgba(212,175,55,0.12)">
+        <a href="#" class="works__link" data-cursor-hover>
+          <span class="works__num">01</span>
+          <h3 class="works__title">Brand Legacy Film</h3>
+          <div class="works__meta">
+            <span class="works__cat">Brand Film</span>
+            <span class="works__year">2024</span>
+            <span class="works__arrow">→</span>
+          </div>
+        </a>
+      </div>
 
-<script src="js/main.js"></script>
+      <div class="works__item" data-animate="slide-up" data-delay="0.1" data-category="Corporate" data-year="2024" data-color="rgba(212,175,55,0.15)">
+        <a href="#" class="works__link" data-cursor-hover>
+          <span class="works__num">02</span>
+          <h3 class="works__title">Corporate Vision</h3>
+          <div class="works__meta">
+            <span class="works__cat">Corporate</span>
+            <span class="works__year">2024</span>
+            <span class="works__arrow">→</span>
+          </div>
+        </a>
+      </div>
+
+      <div class="works__item" data-animate="slide-up" data-delay="0.2" data-category="Commercial" data-year="2023" data-color="rgba(212,175,55,0.10)">
+        <a href="#" class="works__link" data-cursor-hover>
+          <span class="works__num">03</span>
+          <h3 class="works__title">Product Showcase</h3>
+          <div class="works__meta">
+            <span class="works__cat">Commercial</span>
+            <span class="works__year">2023</span>
+            <span class="works__arrow">→</span>
+          </div>
+        </a>
+      </div>
+
+      <div class="works__item" data-animate="slide-up" data-delay="0.3" data-category="Promotion" data-year="2023" data-color="rgba(212,175,55,0.18)">
+        <a href="#" class="works__link" data-cursor-hover>
+          <span class="works__num">04</span>
+          <h3 class="works__title">Campaign Story</h3>
+          <div class="works__meta">
+            <span class="works__cat">Promotion</span>
+            <span class="works__year">2023</span>
+            <span class="works__arrow">→</span>
+          </div>
+        </a>
+      </div>
+
+      <div class="works__item" data-animate="slide-up" data-delay="0.4" data-category="Documentary" data-year="2023" data-color="rgba(212,175,55,0.08)">
+        <a href="#" class="works__link" data-cursor-hover>
+          <span class="works__num">05</span>
+          <h3 class="works__title">Heritage Documentary</h3>
+          <div class="works__meta">
+            <span class="works__cat">Documentary</span>
+            <span class="works__year">2023</span>
+            <span class="works__arrow">→</span>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div class="works__view-all" data-animate="fade" data-delay="0.5">
+      <a href="#" class="view-all-link gold-line" data-cursor-hover>
+        View All Projects <span>→</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ============================================
+       REEL SECTION
+       ============================================ -->
+  <section id="reel" class="reel">
+    <span class="section-label" data-animate="fade">03 — SHOWREEL</span>
+    <div class="reel__container" data-animate="slide-up">
+      <div class="reel__bg"></div>
+      <button class="reel__play" data-cursor-hover>
+        <div class="reel__play-outer"></div>
+        <div class="reel__play-inner">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="#D4AF37" stroke="none">
+            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+          </svg>
+        </div>
+      </button>
+      <!-- Corner decorations -->
+      <div class="reel__corner reel__corner--tl"></div>
+      <div class="reel__corner reel__corner--tr"></div>
+      <div class="reel__corner reel__corner--bl"></div>
+      <div class="reel__corner reel__corner--br"></div>
+      <span class="reel__label">Play Showreel 2024</span>
+    </div>
+  </section>
+
+  <!-- ============================================
+       SPACER (for parallax footer reveal)
+       ============================================ -->
+  <div class="footer-spacer"></div>
+
+  <!-- ============================================
+       FOOTER
+       ============================================ -->
+  <footer id="contact" class="footer">
+    <div class="footer__main">
+      <p class="footer__pre">Have a project in mind?</p>
+      <a href="mailto:hello@prosperproduction.com" class="footer__cta" data-cursor-hover>
+        <span class="footer__cta-text">LET'S TALK</span>
+        <div class="footer__cta-line"></div>
+      </a>
+      <p class="footer__email">hello@prosperproduction.com</p>
+    </div>
+    <div class="footer__bottom">
+      <div class="footer__bottom-left">
+        <img src="assets/images/logo_main.png" alt="PP" width="36" height="36" class="footer__logo-img">
+        <span class="footer__brand-name">Prosper Production</span>
+      </div>
+      <div class="footer__socials">
+        <a href="#" class="footer__social gold-line" data-cursor-hover>Instagram</a>
+        <a href="#" class="footer__social gold-line" data-cursor-hover>YouTube</a>
+        <a href="#" class="footer__social gold-line" data-cursor-hover>Vimeo</a>
+      </div>
+      <p class="footer__copy">© 2024 Prosper Production. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- JS -->
+  <script src="js/main.js"></script>
 </body>
 </html>
