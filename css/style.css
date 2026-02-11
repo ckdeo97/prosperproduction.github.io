@@ -1,1 +1,183 @@
-ㅁㄴㅇ
+:root{
+--navy:#0f1625;
+--ease:cubic-bezier(.22,1,.36,1);
+}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:'Noto Sans KR',sans-serif;
+background:var(--navy);
+color:#fff;
+overflow-x:hidden;
+cursor:none;
+}
+
+/* 커스텀 커서 */
+.cursor{
+position:fixed;
+width:10px;
+height:10px;
+border-radius:50%;
+background:#fff;
+mix-blend-mode:difference;
+pointer-events:none;
+z-index:9999;
+}
+
+/* 네비 */
+nav{
+position:fixed;
+width:100%;
+padding:30px 80px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+z-index:1000;
+transition:.4s var(--ease);
+}
+
+nav.scrolled{
+background:rgba(15,22,37,.95);
+padding:15px 80px;
+box-shadow:0 20px 60px rgba(0,0,0,.4);
+}
+
+nav img{
+height:26px;
+}
+
+.nav-links a{
+color:#fff;
+text-decoration:none;
+margin-left:40px;
+}
+
+/* HERO */
+.hero{
+height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+background:linear-gradient(130deg,#0f1625,#141f36,#0f1625);
+background-size:300% 300%;
+animation:bgMove 18s ease infinite;
+}
+
+@keyframes bgMove{
+0%{background-position:0% 50%}
+50%{background-position:100% 50%}
+100%{background-position:0% 50%}
+}
+
+.hero img{
+width:260px;
+}
+
+/* 섹션 */
+section{
+padding:160px 80px;
+}
+
+.light{
+background:#fff;
+color:#111;
+}
+
+h2{
+font-family:'Playfair Display',serif;
+font-size:48px;
+margin-bottom:60px;
+}
+
+/* 서비스 */
+.services-grid{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:40px;
+}
+
+.service{
+padding:60px;
+background:#fff;
+color:#111;
+transform:translateY(60px);
+opacity:0;
+transition:.5s var(--ease);
+}
+
+.service:hover{
+transform:translateY(-14px);
+background:#111;
+color:#fff;
+}
+
+/* 포트폴리오 */
+.portfolio-grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:50px;
+}
+
+.portfolio-card{
+cursor:pointer;
+border-radius:14px;
+overflow:hidden;
+box-shadow:0 30px 80px rgba(0,0,0,.3);
+transform:translateY(80px);
+opacity:0;
+transition:.5s var(--ease);
+}
+
+.portfolio-card:hover{
+transform:translateY(-12px) scale(1.02);
+}
+
+.thumb{
+position:relative;
+padding-bottom:56.25%;
+background-size:cover;
+background-position:center;
+}
+
+.play-btn{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+width:80px;
+height:80px;
+border-radius:50%;
+background:rgba(0,0,0,.6);
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:28px;
+color:#fff;
+}
+
+/* 모달 */
+.modal{
+position:fixed;
+width:100%;
+height:100%;
+background:rgba(0,0,0,.9);
+display:none;
+align-items:center;
+justify-content:center;
+z-index:1500;
+}
+
+.modal iframe{
+width:80%;
+height:80%;
+}
+
+@media(max-width:1000px){
+.services-grid{grid-template-columns:repeat(2,1fr);}
+.portfolio-grid{grid-template-columns:1fr;}
+}
