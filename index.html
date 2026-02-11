@@ -1,4 +1,4 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
@@ -13,11 +13,11 @@
 --navy-deep:#162033;
 --gold:#d6c6a5;
 --light:#f8f8f8;
---gray:#a0a0a0;
+--gray:#aaa;
+--ease:cubic-bezier(.4,0,.2,1);
 }
 
 *{margin:0;padding:0;box-sizing:border-box;}
-
 body{
 font-family:'Noto Sans KR',sans-serif;
 background:var(--navy);
@@ -25,30 +25,32 @@ color:#fff;
 overflow-x:hidden;
 }
 
-section{padding:160px 80px;}
-.container{max-width:1400px;margin:auto;}
+/* ================= NAVIGATION ================= */
 
 nav{
 position:fixed;
 width:100%;
-padding:30px 80px;
+padding:35px 80px;
 z-index:1000;
-transition:0.4s;
+transition:all .4s var(--ease);
 }
 nav.scrolled{
-background:rgba(22,32,51,0.95);
+padding:18px 80px;
+background:rgba(22,32,51,.95);
 backdrop-filter:blur(12px);
+box-shadow:0 20px 60px rgba(0,0,0,.4);
 }
 
 .nav-inner{
 display:flex;
 justify-content:space-between;
 align-items:center;
+max-width:1400px;
+margin:auto;
 }
 
-.logo img{
-height:40px;
-}
+.logo img{height:42px;transition:.4s;}
+nav.scrolled .logo img{height:32px;}
 
 .nav-menu{
 display:flex;
@@ -59,25 +61,22 @@ list-style:none;
 .nav-menu a{
 color:#fff;
 text-decoration:none;
-font-weight:400;
-letter-spacing:1px;
 position:relative;
 }
 
 .nav-menu a:after{
 content:"";
 position:absolute;
-bottom:-6px;
 left:0;
-width:0;
+bottom:-6px;
 height:1px;
+width:0;
 background:var(--gold);
-transition:0.3s;
+transition:.3s;
 }
-
 .nav-menu a:hover:after{width:100%;}
 
-/* HERO */
+/* ================= HERO ================= */
 
 .hero{
 height:100vh;
@@ -85,93 +84,140 @@ display:flex;
 align-items:center;
 justify-content:center;
 text-align:center;
-background:linear-gradient(135deg,var(--navy),var(--navy-deep));
 position:relative;
+overflow:hidden;
+background:linear-gradient(120deg,#1f2a44,#162033,#1f2a44);
+background-size:300% 300%;
+animation:gradientMove 15s ease infinite;
+}
+
+@keyframes gradientMove{
+0%{background-position:0% 50%}
+50%{background-position:100% 50%}
+100%{background-position:0% 50%}
+}
+
+.hero-content{
+position:relative;
+z-index:2;
+transition:all .6s var(--ease);
 }
 
 .hero-content img{
-width:220px;
+width:200px;
 margin-bottom:50px;
 }
 
 .hero h1{
 font-family:'Playfair Display',serif;
-font-size:60px;
-letter-spacing:2px;
-font-weight:600;
+font-size:58px;
 }
 
 .hero p{
-margin-top:30px;
-font-size:20px;
+margin-top:25px;
 color:var(--gray);
 }
 
 .cta{
-margin-top:60px;
+margin-top:50px;
 display:inline-block;
-padding:18px 60px;
+padding:16px 50px;
 border:1px solid var(--gold);
 color:var(--gold);
 text-decoration:none;
-letter-spacing:2px;
-transition:0.3s;
+transition:.4s var(--ease);
 }
-
 .cta:hover{
 background:var(--gold);
 color:var(--navy);
 }
 
-/* SECTION LIGHT */
+/* ================= SCROLL ANIMATION ================= */
+
+.fade-up{
+opacity:0;
+transform:translateY(40px);
+transition:all .8s var(--ease);
+}
+.fade-up.show{
+opacity:1;
+transform:translateY(0);
+}
+
+.slide-left{
+opacity:0;
+transform:translateX(-60px);
+transition:all .8s var(--ease);
+}
+.slide-right{
+opacity:0;
+transform:translateX(60px);
+transition:all .8s var(--ease);
+}
+.slide-left.show,
+.slide-right.show{
+opacity:1;
+transform:translateX(0);
+}
+
+/* ================= SERVICES ================= */
 
 .light-section{
 background:#fff;
 color:#111;
+padding:160px 80px;
 }
 
 .section-title{
 font-family:'Playfair Display',serif;
-font-size:48px;
-margin-bottom:25px;
+font-size:46px;
+margin-bottom:20px;
 }
 
 .section-sub{
 color:#777;
-margin-bottom:90px;
+margin-bottom:80px;
 }
-
-/* SERVICES */
 
 .services-grid{
 display:grid;
 grid-template-columns:repeat(4,1fr);
-gap:50px;
+gap:40px;
 }
 
 .service{
 padding:60px;
 background:#fff;
-box-shadow:0 30px 80px rgba(0,0,0,0.06);
-transition:0.4s;
+box-shadow:0 20px 60px rgba(0,0,0,.08);
+transition:.4s var(--ease);
+opacity:0;
+transform:translateY(50px);
+}
+.service.show{
+opacity:1;
+transform:translateY(0);
 }
 
 .service:hover{
 transform:translateY(-12px);
-box-shadow:0 50px 120px rgba(0,0,0,0.15);
+background:#111;
+color:#fff;
 }
 
-.service h3{
-font-size:20px;
-margin-bottom:20px;
-font-weight:600;
+/* ================= PROCESS ================= */
+
+.process{
+padding:160px 80px;
+background:var(--navy-deep);
 }
 
-.service p{
-color:#666;
+.process-item{
+display:flex;
+justify-content:space-between;
+margin-bottom:80px;
 }
 
-/* PORTFOLIO */
+/* ================= PORTFOLIO ================= */
 
 .portfolio-grid{
 display:grid;
@@ -183,71 +229,70 @@ gap:50px;
 position:relative;
 padding-bottom:56.25%;
 overflow:hidden;
-border-radius:10px;
-box-shadow:0 30px 80px rgba(0,0,0,0.15);
+border-radius:12px;
+box-shadow:0 20px 60px rgba(0,0,0,.2);
+transition:.5s var(--ease);
+opacity:0;
+transform:translateY(60px);
+}
+.portfolio-item.show{
+opacity:1;
+transform:translateY(0);
+}
+
+.portfolio-item:hover{
+transform:translateY(-12px) scale(1.02);
+box-shadow:0 40px 120px rgba(0,0,0,.5);
 }
 
 .portfolio-item iframe{
 position:absolute;
-top:0;left:0;width:100%;height:100%;border:none;
+width:100%;
+height:100%;
+top:0;
+left:0;
+transition:.6s var(--ease);
+}
+.portfolio-item:hover iframe{
+transform:scale(1.08);
 }
 
-/* CONTACT */
+/* ================= CONTACT ================= */
 
 .contact{
-background:var(--navy-deep);
+background:#111;
+padding:160px 80px;
 }
 
 .contact-grid{
 display:grid;
 grid-template-columns:1.2fr 1fr;
-gap:120px;
+gap:100px;
 }
 
 .contact-form{
 background:#fff;
-padding:80px;
-border-radius:8px;
-color:#111;
+padding:70px;
+color:#000;
 }
 
 .contact-form input,
 .contact-form textarea{
 width:100%;
-padding:18px;
-margin-bottom:25px;
+padding:16px;
+margin-bottom:20px;
 border:1px solid #ddd;
-font-family:inherit;
 }
 
-.contact-form button{
-width:100%;
-padding:20px;
-background:var(--navy);
-color:#fff;
-border:none;
-font-weight:600;
-cursor:pointer;
-}
+/* ================= RESPONSIVE ================= */
 
-footer{
-text-align:center;
-padding:60px;
-background:var(--navy);
-font-size:14px;
-color:#aaa;
-}
-
-/* RESPONSIVE */
-
-@media(max-width:1200px){
+@media(max-width:1100px){
 .services-grid{grid-template-columns:repeat(2,1fr);}
 .portfolio-grid{grid-template-columns:1fr;}
 .contact-grid{grid-template-columns:1fr;}
 }
 
 @media(max-width:768px){
-section{padding:120px 30px;}
 .hero h1{font-size:36px;}
 }
 </style>
@@ -256,10 +301,8 @@ section{padding:120px 30px;}
 <body>
 
 <nav>
-<div class="nav-inner container">
-<div class="logo">
-<img src="assets/logo.png" alt="PROSPER">
-</div>
+<div class="nav-inner">
+<div class="logo"><img src="assets/logo.png"></div>
 <ul class="nav-menu">
 <li><a href="#services">SERVICES</a></li>
 <li><a href="#portfolio">PORTFOLIO</a></li>
@@ -270,7 +313,7 @@ section{padding:120px 30px;}
 
 <section class="hero">
 <div class="hero-content">
-<img src="assets/logo.png" alt="PROSPER LOGO">
+<img src="assets/logo.png">
 <h1>PROSPER PRODUCTION</h1>
 <p>Luxury Visual & Brand Film Studio</p>
 <a href="#contact" class="cta">PROJECT INQUIRY</a>
@@ -278,55 +321,75 @@ section{padding:120px 30px;}
 </section>
 
 <section id="services" class="light-section">
-<div class="container">
-<h2 class="section-title">Services</h2>
-<p class="section-sub">전략부터 제작까지 통합 비주얼 솔루션</p>
+<h2 class="section-title fade-up">Services</h2>
+<p class="section-sub fade-up">전략부터 제작까지 통합 비주얼 솔루션</p>
+
 <div class="services-grid">
-<div class="service"><h3>Brand Film</h3><p>브랜드의 가치를 영상으로 표현합니다.</p></div>
-<div class="service"><h3>Commercial</h3><p>고급 광고 영상 및 캠페인 제작.</p></div>
-<div class="service"><h3>Creative Planning</h3><p>콘텐츠 전략 및 브랜딩 기획.</p></div>
-<div class="service"><h3>Marketing</h3><p>디지털 퍼포먼스 운영 및 광고 집행.</p></div>
-</div>
+<div class="service">Brand Film</div>
+<div class="service">Commercial</div>
+<div class="service">Creative Planning</div>
+<div class="service">Marketing</div>
 </div>
 </section>
 
 <section id="portfolio" class="light-section">
-<div class="container">
-<h2 class="section-title">Portfolio</h2>
+<h2 class="section-title fade-up">Portfolio</h2>
 <div class="portfolio-grid">
-<div class="portfolio-item"><iframe src="https://player.vimeo.com/video/1163933222" allowfullscreen></iframe></div>
-<div class="portfolio-item"><iframe src="https://player.vimeo.com/video/1163933402" allowfullscreen></iframe></div>
-</div>
+<div class="portfolio-item"><iframe src="https://player.vimeo.com/video/1163933222"></iframe></div>
+<div class="portfolio-item"><iframe src="https://player.vimeo.com/video/1163933402"></iframe></div>
+<div class="portfolio-item"><iframe src="https://player.vimeo.com/video/1163933341"></iframe></div>
+<div class="portfolio-item"><iframe src="https://player.vimeo.com/video/1163933252"></iframe></div>
 </div>
 </section>
 
 <section id="contact" class="contact">
-<div class="container">
-<h2 class="section-title">Contact</h2>
+<h2 class="section-title fade-up">Contact</h2>
 <div class="contact-grid">
-<div>
-<p style="margin-top:40px;color:#aaa;">prosper@company.com<br>+82 10-0000-0000</p>
-</div>
+<div>prosper@company.com</div>
 <div class="contact-form">
-<input type="text" placeholder="이름 / 회사명">
-<input type="email" placeholder="이메일">
-<textarea placeholder="프로젝트 내용을 작성해주세요"></textarea>
-<button>문의하기</button>
-</div>
+<input placeholder="이름">
+<input placeholder="이메일">
+<textarea placeholder="프로젝트 내용"></textarea>
 </div>
 </div>
 </section>
 
-<footer>
-© 2026 PROSPER PRODUCTION
-</footer>
-
 <script>
+
+/* NAVIGATION EFFECT */
 window.addEventListener('scroll',()=>{
 const nav=document.querySelector('nav');
 if(window.scrollY>80){nav.classList.add('scrolled')}
 else{nav.classList.remove('scrolled')}
 });
+
+/* HERO PARALLAX */
+window.addEventListener('scroll',()=>{
+const hero=document.querySelector('.hero-content');
+let sc=window.scrollY;
+hero.style.transform=`translateY(${sc*0.4}px)`;
+hero.style.opacity=1-(sc/700);
+});
+
+/* INTERSECTION OBSERVER */
+const observer=new IntersectionObserver(entries=>{
+entries.forEach(entry=>{
+if(entry.isIntersecting){
+entry.target.classList.add('show');
+}
+});
+},{threshold:0.2});
+
+document.querySelectorAll('.fade-up,.service,.portfolio-item').forEach(el=>{
+observer.observe(el);
+});
+
+/* SERVICE SEQUENTIAL */
+const services=document.querySelectorAll('.service');
+services.forEach((el,i)=>{
+setTimeout(()=>{el.classList.add('show')},i*100);
+});
+
 </script>
 
 </body>
