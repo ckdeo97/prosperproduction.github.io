@@ -27,37 +27,19 @@ overflow-x:hidden;
 cursor:none;
 }
 
-/* CUSTOM CURSOR */
+/* 커스텀 커서 */
 .cursor{
-position:fixed;
-width:10px;height:10px;
+position:fixed;width:8px;height:8px;
 background:#fff;border-radius:50%;
 pointer-events:none;z-index:9999;
 }
 .cursor-ring{
-position:fixed;
-width:40px;height:40px;
+position:fixed;width:36px;height:36px;
 border:1px solid #fff;border-radius:50%;
 pointer-events:none;z-index:9998;
-transition:.15s linear;
 }
 
-/* LOADER */
-.loader{
-position:fixed;
-width:100%;height:100vh;
-background:var(--navy);
-display:flex;align-items:center;justify-content:center;
-z-index:2000;flex-direction:column;
-}
-.loader img{width:120px;margin-bottom:20px;opacity:0}
-.loader h1{
-font-family:'Playfair Display',serif;
-letter-spacing:15px;
-opacity:0;
-}
-
-/* NAV */
+/* 네비 */
 nav{
 position:fixed;width:100%;padding:30px 80px;
 display:flex;justify-content:space-between;
@@ -76,29 +58,21 @@ nav img{height:26px}
 .hero{
 height:100vh;
 display:flex;align-items:center;justify-content:center;
-position:relative;text-align:center;
-overflow:hidden;
+text-align:center;
 background:linear-gradient(130deg,#0f1625,#141f36,#0f1625);
 background-size:300% 300%;
 animation:bgMove 18s ease infinite;
+position:relative;
+overflow:hidden;
 }
 @keyframes bgMove{
 0%{background-position:0% 50%}
 50%{background-position:100% 50%}
 100%{background-position:0% 50%}
 }
-.hero img{width:300px;position:relative;z-index:2}
+.hero img{width:260px;z-index:2;position:relative}
 
-/* GRAIN */
-.hero:after{
-content:"";
-position:absolute;
-width:100%;height:100%;
-background:url("https://grainy-gradients.vercel.app/noise.svg");
-opacity:.05;
-}
-
-/* SECTION */
+/* 섹션 */
 section{padding:160px 80px}
 .light{background:#fff;color:#111}
 h2{
@@ -106,45 +80,64 @@ font-family:'Playfair Display',serif;
 font-size:48px;margin-bottom:60px;
 }
 
-/* SERVICES */
+/* 서비스 */
 .services-grid{
 display:grid;grid-template-columns:repeat(4,1fr);
 gap:40px;
 }
 .service{
-padding:60px;
-background:#fff;
-color:#111;
-transition:.5s var(--ease);
+padding:60px;background:#fff;color:#111;
 transform:translateY(60px);
 opacity:0;
+transition:.5s var(--ease);
 }
 .service:hover{
 transform:translateY(-14px);
-background:#111;
-color:#fff;
+background:#111;color:#fff;
 }
 
-/* PORTFOLIO */
+/* 포트폴리오 */
 .portfolio-grid{
 display:grid;grid-template-columns:repeat(2,1fr);
 gap:50px;
 }
-.portfolio-item{
-position:relative;padding-bottom:56.25%;
-overflow:hidden;border-radius:12px;
-box-shadow:0 20px 60px rgba(0,0,0,.3);
-cursor:pointer;
+
+.portfolio-card{
+cursor:pointer;border-radius:14px;
+overflow:hidden;
+box-shadow:0 30px 80px rgba(0,0,0,.3);
 transform:translateY(80px);
 opacity:0;
+transition:.5s var(--ease);
 }
-.portfolio-item iframe{
-position:absolute;width:100%;height:100%;
-top:0;left:0;transition:.6s var(--ease);
-}
-.portfolio-item:hover iframe{transform:scale(1.1)}
 
-/* MODAL */
+.portfolio-card:hover{
+transform:translateY(-12px) scale(1.02);
+box-shadow:0 40px 100px rgba(0,0,0,.45);
+}
+
+.thumb{
+position:relative;padding-bottom:56.25%;
+background-size:cover;
+background-position:center;
+}
+
+.play-btn{
+position:absolute;
+top:50%;left:50%;
+transform:translate(-50%,-50%);
+width:80px;height:80px;
+border-radius:50%;
+background:rgba(0,0,0,.6);
+display:flex;align-items:center;justify-content:center;
+font-size:28px;color:#fff;
+transition:.3s;
+}
+.portfolio-card:hover .play-btn{
+background:#fff;color:#000;
+}
+
+/* 모달 */
 .modal{
 position:fixed;width:100%;height:100%;
 background:rgba(0,0,0,.9);
@@ -153,25 +146,10 @@ z-index:1500;
 }
 .modal iframe{width:80%;height:80%}
 
-/* CONTACT */
-.contact{
-background:var(--deep);
-display:grid;grid-template-columns:1.2fr 1fr;
-gap:100px;
-}
-.contact form input,
-.contact form textarea{
-width:100%;padding:16px;margin-bottom:20px;
-}
-
-/* SCROLLBAR */
-::-webkit-scrollbar{width:6px}
-::-webkit-scrollbar-thumb{background:var(--gold)}
-
+/* 반응형 */
 @media(max-width:1000px){
 .services-grid{grid-template-columns:repeat(2,1fr)}
 .portfolio-grid{grid-template-columns:1fr}
-.contact{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -180,11 +158,6 @@ width:100%;padding:16px;margin-bottom:20px;
 
 <div class="cursor"></div>
 <div class="cursor-ring"></div>
-
-<div class="loader">
-<img src="assets/logo_white.png">
-<h1>PROSPER</h1>
-</div>
 
 <nav>
 <img src="assets/typologo_white.png">
@@ -207,46 +180,55 @@ width:100%;padding:16px;margin-bottom:20px;
 <section class="light">
 <h2>Portfolio</h2>
 <div class="portfolio-grid">
-<div class="portfolio-item" data-video="1163933222"><iframe src="https://player.vimeo.com/video/1163933222"></iframe></div>
-<div class="portfolio-item" data-video="1163933402"><iframe src="https://player.vimeo.com/video/1163933402"></iframe></div>
-<div class="portfolio-item" data-video="1163933341"><iframe src="https://player.vimeo.com/video/1163933341"></iframe></div>
-<div class="portfolio-item" data-video="1163933252"><iframe src="https://player.vimeo.com/video/1163933252"></iframe></div>
+
+<div class="portfolio-card" data-video="1163933222">
+<div class="thumb" style="background-image:url('https://vumbnail.com/1163933222.jpg')">
+<div class="play-btn">▶</div>
+</div>
+</div>
+
+<div class="portfolio-card" data-video="1163933402">
+<div class="thumb" style="background-image:url('https://vumbnail.com/1163933402.jpg')">
+<div class="play-btn">▶</div>
+</div>
+</div>
+
+<div class="portfolio-card" data-video="1163933341">
+<div class="thumb" style="background-image:url('https://vumbnail.com/1163933341.jpg')">
+<div class="play-btn">▶</div>
+</div>
+</div>
+
+<div class="portfolio-card" data-video="1163933252">
+<div class="thumb" style="background-image:url('https://vumbnail.com/1163933252.jpg')">
+<div class="play-btn">▶</div>
+</div>
+</div>
+
 </div>
 </section>
 
-<section class="contact">
-<div>
-<h2>Contact</h2>
-<p>Let’s create something remarkable.</p>
-</div>
-<form>
-<input placeholder="이름">
-<input placeholder="이메일">
-<textarea placeholder="프로젝트 내용"></textarea>
-</form>
-</section>
-
-<div class="modal"><iframe></iframe></div>
+<div class="modal"><iframe frameborder="0" allow="autoplay; fullscreen"></iframe></div>
 
 <script>
 gsap.registerPlugin(ScrollTrigger);
 
-/* LOADER */
-gsap.to(".loader img",{opacity:1,scale:1,duration:1});
-gsap.to(".loader h1",{opacity:1,letterSpacing:5,duration:1,delay:.5});
-gsap.to(".loader",{opacity:0,duration:1,delay:2,onComplete:()=>document.querySelector(".loader").style.display="none"});
-
-/* NAV */
+/* 네비 축소 */
 window.addEventListener("scroll",()=>{
-document.querySelector("nav").classList.toggle("scrolled",window.scrollY>50);
+document.querySelector("nav")
+.classList.toggle("scrolled",window.scrollY>50);
 });
 
-/* HERO PARALLAX */
+/* Hero 패럴랙스 */
 window.addEventListener("mousemove",(e)=>{
-gsap.to(".hero img",{x:(e.clientX-window.innerWidth/2)/30,y:(e.clientY-window.innerHeight/2)/30,duration:0.5});
+gsap.to(".hero img",{
+x:(e.clientX-window.innerWidth/2)/30,
+y:(e.clientY-window.innerHeight/2)/30,
+duration:0.5
+});
 });
 
-/* SCROLL ANIM */
+/* 스크롤 애니메이션 */
 gsap.utils.toArray(".service").forEach((el,i)=>{
 gsap.to(el,{
 opacity:1,y:0,duration:1,delay:i*0.1,
@@ -254,37 +236,41 @@ scrollTrigger:{trigger:el,start:"top 85%"}
 });
 });
 
-gsap.utils.toArray(".portfolio-item").forEach((el)=>{
+gsap.utils.toArray(".portfolio-card").forEach((el)=>{
 gsap.to(el,{
 opacity:1,y:0,duration:1,
 scrollTrigger:{trigger:el,start:"top 85%"}
 });
 });
 
-/* MODAL */
+/* 모달 */
 const modal=document.querySelector(".modal");
 const modalIframe=modal.querySelector("iframe");
 
-document.querySelectorAll(".portfolio-item").forEach(item=>{
-item.addEventListener("click",()=>{
+document.querySelectorAll(".portfolio-card").forEach(card=>{
+card.addEventListener("click",()=>{
+const videoId=card.dataset.video;
 modal.style.display="flex";
-modalIframe.src="https://player.vimeo.com/video/"+item.dataset.video+"?autoplay=1";
+modalIframe.src=
+"https://player.vimeo.com/video/"+videoId+
+"?autoplay=1&title=0&byline=0&portrait=0&badge=0&controls=0&dnt=1";
 });
 });
+
 modal.addEventListener("click",()=>{
 modal.style.display="none";
 modalIframe.src="";
 });
 
-/* CUSTOM CURSOR */
+/* 커스텀 커서 */
 const cursor=document.querySelector(".cursor");
 const ring=document.querySelector(".cursor-ring");
 
 document.addEventListener("mousemove",e=>{
 cursor.style.left=e.clientX+"px";
 cursor.style.top=e.clientY+"px";
-ring.style.left=e.clientX-15+"px";
-ring.style.top=e.clientY-15+"px";
+ring.style.left=e.clientX-14+"px";
+ring.style.top=e.clientY-14+"px";
 });
 </script>
 
