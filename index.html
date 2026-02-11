@@ -5,209 +5,197 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PROSPER PRODUCTION</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Noto+Sans+KR:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
 <style>
 :root{
---navy:#1f2a44;
---navy-deep:#141c2e;
+--navy:#0f1625;
+--deep:#0c1220;
 --gold:#d6c6a5;
---ease:cubic-bezier(.4,0,.2,1);
+--ease:cubic-bezier(.22,1,.36,1);
 }
 
-*{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Noto Sans KR',sans-serif;background:var(--navy);color:#fff;overflow-x:hidden;}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+font-family:'Noto Sans KR',sans-serif;
+background:var(--navy);
+color:#fff;
+overflow-x:hidden;
+cursor:none;
+}
+
+/* CUSTOM CURSOR */
+.cursor{
+position:fixed;
+width:10px;height:10px;
+background:#fff;border-radius:50%;
+pointer-events:none;z-index:9999;
+}
+.cursor-ring{
+position:fixed;
+width:40px;height:40px;
+border:1px solid #fff;border-radius:50%;
+pointer-events:none;z-index:9998;
+transition:.15s linear;
+}
+
+/* LOADER */
+.loader{
+position:fixed;
+width:100%;height:100vh;
+background:var(--navy);
+display:flex;align-items:center;justify-content:center;
+z-index:2000;flex-direction:column;
+}
+.loader img{width:120px;margin-bottom:20px;opacity:0}
+.loader h1{
+font-family:'Playfair Display',serif;
+letter-spacing:15px;
+opacity:0;
+}
 
 /* NAV */
 nav{
-position:fixed;
-width:100%;
-padding:30px 80px;
-z-index:1000;
+position:fixed;width:100%;padding:30px 80px;
+display:flex;justify-content:space-between;
+align-items:center;z-index:1000;
 transition:.4s var(--ease);
 }
 nav.scrolled{
-padding:15px 80px;
-background:rgba(20,28,46,.95);
+background:rgba(15,22,37,.95);
 backdrop-filter:blur(10px);
+padding:15px 80px;
 box-shadow:0 20px 60px rgba(0,0,0,.4);
 }
-
-.nav-inner{
-max-width:1400px;
-margin:auto;
-display:flex;
-justify-content:space-between;
-align-items:center;
-}
-
-.logo img{height:28px;transition:.4s;}
-nav.scrolled .logo img{height:22px;}
-
-.nav-menu{display:flex;gap:50px;list-style:none;}
-.nav-menu a{color:#fff;text-decoration:none;position:relative;}
-.nav-menu a:after{
-content:"";position:absolute;left:0;bottom:-6px;height:1px;width:0;background:#fff;transition:.3s;
-}
-.nav-menu a:hover:after{width:100%;}
+nav img{height:26px}
 
 /* HERO */
 .hero{
 height:100vh;
-display:flex;
-align-items:center;
-justify-content:center;
-text-align:center;
-position:relative;
-background:linear-gradient(120deg,#1f2a44,#141c2e,#1f2a44);
-background-size:300% 300%;
-animation:gradientMove 18s ease infinite;
+display:flex;align-items:center;justify-content:center;
+position:relative;text-align:center;
 overflow:hidden;
+background:linear-gradient(130deg,#0f1625,#141f36,#0f1625);
+background-size:300% 300%;
+animation:bgMove 18s ease infinite;
 }
-@keyframes gradientMove{
+@keyframes bgMove{
 0%{background-position:0% 50%}
 50%{background-position:100% 50%}
 100%{background-position:0% 50%}
 }
+.hero img{width:300px;position:relative;z-index:2}
 
-.hero-content{
-transition:.6s var(--ease);
-}
-.hero-content img{
-width:280px;
-margin-bottom:40px;
+/* GRAIN */
+.hero:after{
+content:"";
+position:absolute;
+width:100%;height:100%;
+background:url("https://grainy-gradients.vercel.app/noise.svg");
+opacity:.05;
 }
 
 /* SECTION */
-.section{
-padding:160px 80px;
-}
-.light{background:#fff;color:#111;}
-.dark{background:var(--navy-deep);}
-
-.section-title{
+section{padding:160px 80px}
+.light{background:#fff;color:#111}
+h2{
 font-family:'Playfair Display',serif;
-font-size:46px;
-margin-bottom:20px;
-opacity:0;
-transform:translateY(40px);
-transition:.8s var(--ease);
+font-size:48px;margin-bottom:60px;
 }
-.section-title.show{opacity:1;transform:translateY(0);}
 
 /* SERVICES */
 .services-grid{
-display:grid;
-grid-template-columns:repeat(4,1fr);
+display:grid;grid-template-columns:repeat(4,1fr);
 gap:40px;
-margin-top:80px;
 }
 .service{
 padding:60px;
 background:#fff;
-box-shadow:0 20px 60px rgba(0,0,0,.08);
-transition:.4s var(--ease);
+color:#111;
+transition:.5s var(--ease);
+transform:translateY(60px);
 opacity:0;
-transform:translateY(50px);
 }
-.service.show{opacity:1;transform:translateY(0);}
 .service:hover{
-transform:translateY(-12px);
+transform:translateY(-14px);
 background:#111;
 color:#fff;
 }
 
 /* PORTFOLIO */
 .portfolio-grid{
-display:grid;
-grid-template-columns:repeat(2,1fr);
+display:grid;grid-template-columns:repeat(2,1fr);
 gap:50px;
-margin-top:80px;
 }
 .portfolio-item{
-position:relative;
-padding-bottom:56.25%;
-overflow:hidden;
-border-radius:14px;
-box-shadow:0 20px 60px rgba(0,0,0,.2);
-transition:.5s var(--ease);
+position:relative;padding-bottom:56.25%;
+overflow:hidden;border-radius:12px;
+box-shadow:0 20px 60px rgba(0,0,0,.3);
+cursor:pointer;
+transform:translateY(80px);
 opacity:0;
-transform:translateY(60px);
-}
-.portfolio-item.show{opacity:1;transform:translateY(0);}
-.portfolio-item:hover{
-transform:translateY(-12px) scale(1.03);
-box-shadow:0 40px 120px rgba(0,0,0,.5);
 }
 .portfolio-item iframe{
-position:absolute;
-width:100%;
-height:100%;
-top:0;
-left:0;
-transition:.6s var(--ease);
+position:absolute;width:100%;height:100%;
+top:0;left:0;transition:.6s var(--ease);
 }
-.portfolio-item:hover iframe{transform:scale(1.08);}
+.portfolio-item:hover iframe{transform:scale(1.1)}
+
+/* MODAL */
+.modal{
+position:fixed;width:100%;height:100%;
+background:rgba(0,0,0,.9);
+display:none;align-items:center;justify-content:center;
+z-index:1500;
+}
+.modal iframe{width:80%;height:80%}
 
 /* CONTACT */
-.contact-grid{
-display:grid;
-grid-template-columns:1.2fr 1fr;
+.contact{
+background:var(--deep);
+display:grid;grid-template-columns:1.2fr 1fr;
 gap:100px;
-margin-top:80px;
 }
-.contact-form{
-background:#fff;
-padding:70px;
-color:#000;
-}
-.contact-form input,
-.contact-form textarea{
-width:100%;
-padding:16px;
-margin-bottom:20px;
-border:1px solid #ddd;
+.contact form input,
+.contact form textarea{
+width:100%;padding:16px;margin-bottom:20px;
 }
 
-/* FOOTER */
-.footer{
-text-align:center;
-padding:80px 20px;
-background:#0f1625;
-}
-.footer img{height:26px;margin-bottom:20px;opacity:.8;}
+/* SCROLLBAR */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-thumb{background:var(--gold)}
 
-@media(max-width:1100px){
-.services-grid{grid-template-columns:repeat(2,1fr);}
-.portfolio-grid{grid-template-columns:1fr;}
-.contact-grid{grid-template-columns:1fr;}
+@media(max-width:1000px){
+.services-grid{grid-template-columns:repeat(2,1fr)}
+.portfolio-grid{grid-template-columns:1fr}
+.contact{grid-template-columns:1fr}
 }
 </style>
 </head>
 
 <body>
 
+<div class="cursor"></div>
+<div class="cursor-ring"></div>
+
+<div class="loader">
+<img src="assets/logo_white.png">
+<h1>PROSPER</h1>
+</div>
+
 <nav>
-<div class="nav-inner">
-<div class="logo">
 <img src="assets/typologo_white.png">
-</div>
-<ul class="nav-menu">
-<li><a href="#services">SERVICES</a></li>
-<li><a href="#portfolio">PORTFOLIO</a></li>
-<li><a href="#contact">CONTACT</a></li>
-</ul>
-</div>
 </nav>
 
 <section class="hero">
-<div class="hero-content">
 <img src="assets/logo_white.png">
-</div>
 </section>
 
-<section id="services" class="section light">
-<h2 class="section-title">Services</h2>
+<section class="light">
+<h2>Services</h2>
 <div class="services-grid">
 <div class="service">Brand Film</div>
 <div class="service">Commercial</div>
@@ -216,46 +204,87 @@ background:#0f1625;
 </div>
 </section>
 
-<section id="portfolio" class="section light">
-<h2 class="section-title">Portfolio</h2>
+<section class="light">
+<h2>Portfolio</h2>
 <div class="portfolio-grid">
-<div class="portfolio-item"><iframe src="https://player.vimeo.com/video/1163933222"></iframe></div>
-<div class="portfolio-item"><iframe src="https://player.vimeo.com/video/1163933402"></iframe></div>
-<div class="portfolio-item"><iframe src="https://player.vimeo.com/video/1163933341"></iframe></div>
-<div class="portfolio-item"><iframe src="https://player.vimeo.com/video/1163933252"></iframe></div>
+<div class="portfolio-item" data-video="1163933222"><iframe src="https://player.vimeo.com/video/1163933222"></iframe></div>
+<div class="portfolio-item" data-video="1163933402"><iframe src="https://player.vimeo.com/video/1163933402"></iframe></div>
+<div class="portfolio-item" data-video="1163933341"><iframe src="https://player.vimeo.com/video/1163933341"></iframe></div>
+<div class="portfolio-item" data-video="1163933252"><iframe src="https://player.vimeo.com/video/1163933252"></iframe></div>
 </div>
 </section>
 
-<section id="contact" class="section dark">
-<h2 class="section-title">Contact</h2>
-<div class="contact-grid">
+<section class="contact">
 <div>
-<h3>Let’s create something remarkable.</h3>
+<h2>Contact</h2>
+<p>Let’s create something remarkable.</p>
 </div>
-<div class="contact-form">
+<form>
 <input placeholder="이름">
 <input placeholder="이메일">
 <textarea placeholder="프로젝트 내용"></textarea>
-</div>
-</div>
+</form>
 </section>
 
-<footer class="footer">
-<img src="assets/typologo_white.png">
-<p>© 2026 PROSPER PRODUCTION</p>
-</footer>
+<div class="modal"><iframe></iframe></div>
 
 <script>
-window.addEventListener('scroll',()=>{
-document.querySelector('nav').classList.toggle('scrolled',window.scrollY>80);
-document.querySelectorAll('.section-title,.service,.portfolio-item').forEach(el=>{
-const rect=el.getBoundingClientRect();
-if(rect.top<window.innerHeight-100){el.classList.add('show')}
+gsap.registerPlugin(ScrollTrigger);
+
+/* LOADER */
+gsap.to(".loader img",{opacity:1,scale:1,duration:1});
+gsap.to(".loader h1",{opacity:1,letterSpacing:5,duration:1,delay:.5});
+gsap.to(".loader",{opacity:0,duration:1,delay:2,onComplete:()=>document.querySelector(".loader").style.display="none"});
+
+/* NAV */
+window.addEventListener("scroll",()=>{
+document.querySelector("nav").classList.toggle("scrolled",window.scrollY>50);
 });
-document.querySelector('.hero-content').style.transform=
-`translateY(${window.scrollY*0.4}px)`;
-document.querySelector('.hero-content').style.opacity=
-1-(window.scrollY/600);
+
+/* HERO PARALLAX */
+window.addEventListener("mousemove",(e)=>{
+gsap.to(".hero img",{x:(e.clientX-window.innerWidth/2)/30,y:(e.clientY-window.innerHeight/2)/30,duration:0.5});
+});
+
+/* SCROLL ANIM */
+gsap.utils.toArray(".service").forEach((el,i)=>{
+gsap.to(el,{
+opacity:1,y:0,duration:1,delay:i*0.1,
+scrollTrigger:{trigger:el,start:"top 85%"}
+});
+});
+
+gsap.utils.toArray(".portfolio-item").forEach((el)=>{
+gsap.to(el,{
+opacity:1,y:0,duration:1,
+scrollTrigger:{trigger:el,start:"top 85%"}
+});
+});
+
+/* MODAL */
+const modal=document.querySelector(".modal");
+const modalIframe=modal.querySelector("iframe");
+
+document.querySelectorAll(".portfolio-item").forEach(item=>{
+item.addEventListener("click",()=>{
+modal.style.display="flex";
+modalIframe.src="https://player.vimeo.com/video/"+item.dataset.video+"?autoplay=1";
+});
+});
+modal.addEventListener("click",()=>{
+modal.style.display="none";
+modalIframe.src="";
+});
+
+/* CUSTOM CURSOR */
+const cursor=document.querySelector(".cursor");
+const ring=document.querySelector(".cursor-ring");
+
+document.addEventListener("mousemove",e=>{
+cursor.style.left=e.clientX+"px";
+cursor.style.top=e.clientY+"px";
+ring.style.left=e.clientX-15+"px";
+ring.style.top=e.clientY-15+"px";
 });
 </script>
 
