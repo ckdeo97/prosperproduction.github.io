@@ -4,8 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PROSPER PRODUCTION</title>
-<link rel="icon" type="image/png" href="assets/simbol_navy.png">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/simbol_navy.png">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/simbol_navy.png">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/simbol_navy.png">
+<link rel="apple-touch-icon" href="assets/simbol_navy.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Noto+Sans+KR:wght@200;300;400;500;600&display=swap" rel="stylesheet">
@@ -210,7 +211,7 @@ footer{background:var(--deep);padding:40px 80px;border-top:1px solid rgba(255,25
 <div class="intro-video-loader" id="introVideoLoader">
   <video
     id="introVideo"
-    src="assets/intro.mov"
+    src="assets/intro.mp4"
     autoplay
     muted
     playsinline
@@ -367,30 +368,39 @@ gsap.registerPlugin(ScrollTrigger);
 (function(){
   const introEl  = document.getElementById('introVideoLoader');
   const introVid = document.getElementById('introVideo');
-
-  let fallbackTimer = null;
+  let dissolved  = false;
 
   function dissolveToHero(){
+    if(dissolved) return;
+    dissolved = true;
     gsap.to(introEl, {
       opacity: 0,
       duration: 1,
       ease: 'power2.inOut',
       onComplete: () => {
         introEl.style.display = 'none';
-        introVid.pause();
-        introVid.src = '';
+        try{ introVid.pause(); introVid.src = ''; }catch(e){}
         revealHero();
       }
     });
   }
 
-  introVid.addEventListener('canplay', function onCanPlay(){
-    introVid.removeEventListener('canplay', onCanPlay);
-    clearTimeout(fallbackTimer);
-    fallbackTimer = setTimeout(dissolveToHero, 2000);
+  /* 방법1: 영상이 2초 이상 재생되면 디졸브 */
+  introVid.addEventListener('timeupdate', function(){
+    if(introVid.currentTime >= 2) dissolveToHero();
   });
 
-  fallbackTimer = setTimeout(dissolveToHero, 3000);
+  /* 방법2: 영상이 자연종료되면 바로 디졸브 */
+  introVid.addEventListener('ended', dissolveToHero);
+
+  /* 방법3: canplay 이후 2초 타이머 */
+  introVid.addEventListener('canplay', function onCanPlay(){
+    introVid.removeEventListener('canplay', onCanPlay);
+    setTimeout(dissolveToHero, 2000);
+  }, { once: true });
+
+  /* 방법4: 최대 3.5초 하드 fallback (로드 실패 포함) */
+  setTimeout(dissolveToHero, 3500);
 })();
 
 function revealHero(){
