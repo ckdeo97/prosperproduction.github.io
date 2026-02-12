@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PROSPER PRODUCTION</title>
+<link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Noto+Sans+KR:wght@200;300;400;500;600&display=swap" rel="stylesheet">
@@ -98,19 +100,21 @@ section{padding:140px 80px;position:relative}
 .portfolio-item:hover::after{opacity:0}
 .portfolio-item iframe{position:absolute;width:100%;height:100%;top:0;left:0;border:none;transition:transform .8s var(--ease);pointer-events:none}
 .portfolio-item:hover iframe{transform:scale(1.05)}
-.portfolio-label{position:absolute;bottom:20px;left:24px;z-index:2;font-family:var(--serif);font-size:13px;letter-spacing:2px;color:rgba(255,255,255,.7);transition:opacity .5s}
-.portfolio-item:hover .portfolio-label{opacity:0}
+.portfolio-label{display:none}
 
 /* PROCESS */
 .process{background:var(--navy)}
 .process-header{text-align:center;margin-bottom:100px}
 .process-header .section-desc{margin:0 auto;text-align:center}
 .process-timeline{display:flex;position:relative;max-width:1000px;margin:0 auto}
-.process-step{flex:1;text-align:center;opacity:0;transform:translateY(30px);position:relative}
+.process-step{flex:1;text-align:center;opacity:0;transform:translateY(30px);position:relative;display:flex;flex-direction:column;align-items:center}
 .step-num{font-family:var(--serif);font-size:11px;letter-spacing:4px;color:var(--gold)}
-.step-dot{width:12px;height:12px;border:1px solid var(--gold);border-radius:50%;margin:18px auto 24px;position:relative;background:var(--navy);z-index:1}
+/* dot-row: dot과 좌우 선을 한 줄에 배치 */
+.step-dot-row{display:flex;align-items:center;width:100%;margin:18px 0 24px}
+.step-dot-line{flex:1;height:1px;background:rgba(201,184,140,.3)}
+.step-dot-line.invisible{background:transparent}
+.step-dot{width:12px;height:12px;border:1px solid var(--gold);border-radius:50%;position:relative;background:var(--navy);flex-shrink:0}
 .step-dot::after{content:'';position:absolute;width:4px;height:4px;background:var(--gold);border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%)}
-.process-line{position:absolute;height:1px;background:linear-gradient(90deg,transparent,rgba(201,184,140,.3),transparent);z-index:0}
 .step-title{font-family:var(--serif);font-size:20px;font-weight:400;margin-bottom:12px;letter-spacing:1px}
 .step-desc{font-size:12px;color:var(--text-light);line-height:1.7;font-weight:300}
 
@@ -173,11 +177,13 @@ footer{background:var(--deep);padding:40px 80px;border-top:1px solid rgba(255,25
   .portfolio-grid{grid-template-columns:1fr}
   .contact{grid-template-columns:1fr;gap:60px}
   .form-row{grid-template-columns:1fr}
-  .process-timeline{flex-direction:column;gap:40px;padding-left:40px}
-  .process-line{width:1px !important;left:45px !important;right:auto !important;top:0 !important;bottom:0 !important;height:auto !important;background:linear-gradient(to bottom,transparent,rgba(201,184,140,.3),transparent) !important}
-  .process-step{text-align:left;padding-left:40px;display:flex;flex-direction:column}
-  .process-step .step-dot{position:absolute;left:-40px;top:0;margin:0}
-  .process-step .step-num{order:-1;margin-bottom:4px}
+  .process-timeline{flex-direction:column;gap:0;padding-left:0}
+  .process-step{text-align:left;padding-left:0;flex-direction:row;flex-wrap:wrap;align-items:flex-start}
+  .step-dot-row{flex-direction:column;width:auto;margin:0;position:absolute;left:0;top:0;height:100%;align-items:center}
+  .step-dot-line{flex:1;width:1px;height:auto}
+  .step-dot-line.invisible{background:transparent}
+  .process-step{padding-left:50px;position:relative;padding-bottom:40px;align-items:flex-start}
+  .process-step .step-num{margin-bottom:4px}
   .modal-container{width:95vw}.modal-close{top:-40px;font-size:11px}
   footer{flex-direction:column;gap:16px;text-align:center}
 }
@@ -284,11 +290,11 @@ footer{background:var(--deep);padding:40px 80px;border-top:1px solid rgba(255,25
     <p class="section-desc">고객사의 만족을 최우선으로, 체계적인 프로세스로 완성도 높은 결과물을 만듭니다.</p>
   </div>
   <div class="process-timeline" id="processTimeline">
-    <div class="process-step"><div class="step-num">01</div><div class="step-dot"></div><div class="step-title">사전 미팅</div><div class="step-desc">브랜드 DNA, 톤앤매너,<br>방향성을 깊이 파악합니다</div></div>
-    <div class="process-step"><div class="step-num">02</div><div class="step-dot"></div><div class="step-title">기획 &amp; 섭외</div><div class="step-desc">스토리텔링 기반의<br>크리에이티브 전략 수립</div></div>
-    <div class="process-step"><div class="step-num">03</div><div class="step-dot"></div><div class="step-title">디자인 컨펌</div><div class="step-desc">시안 공유 및 수정을 통한<br>사전 검증 프로세스</div></div>
-    <div class="process-step"><div class="step-num">04</div><div class="step-dot"></div><div class="step-title">촬영 &amp; 편집</div><div class="step-desc">전문 장비와 기술로<br>최상의 퀄리티 구현</div></div>
-    <div class="process-step"><div class="step-num">05</div><div class="step-dot"></div><div class="step-title">시사 &amp; 납품</div><div class="step-desc">최종 피드백 반영 후<br>완성본 전달</div></div>
+    <div class="process-step"><div class="step-num">01</div><div class="step-dot-row"><div class="step-dot-line invisible"></div><div class="step-dot"></div><div class="step-dot-line"></div></div><div class="step-title">사전 미팅</div><div class="step-desc">브랜드 DNA, 톤앤매너,<br>방향성을 깊이 파악합니다</div></div>
+    <div class="process-step"><div class="step-num">02</div><div class="step-dot-row"><div class="step-dot-line"></div><div class="step-dot"></div><div class="step-dot-line"></div></div><div class="step-title">기획 &amp; 섭외</div><div class="step-desc">스토리텔링 기반의<br>크리에이티브 전략 수립</div></div>
+    <div class="process-step"><div class="step-num">03</div><div class="step-dot-row"><div class="step-dot-line"></div><div class="step-dot"></div><div class="step-dot-line"></div></div><div class="step-title">디자인 컨펌</div><div class="step-desc">시안 공유 및 수정을 통한<br>사전 검증 프로세스</div></div>
+    <div class="process-step"><div class="step-num">04</div><div class="step-dot-row"><div class="step-dot-line"></div><div class="step-dot"></div><div class="step-dot-line"></div></div><div class="step-title">촬영 &amp; 편집</div><div class="step-desc">전문 장비와 기술로<br>최상의 퀄리티 구현</div></div>
+    <div class="process-step"><div class="step-num">05</div><div class="step-dot-row"><div class="step-dot-line"></div><div class="step-dot"></div><div class="step-dot-line invisible"></div></div><div class="step-title">시사 &amp; 납품</div><div class="step-desc">최종 피드백 반영 후<br>완성본 전달</div></div>
   </div>
 </section>
 
@@ -404,46 +410,6 @@ gsap.utils.toArray('.process-step').forEach((el,i)=>{
 
 gsap.to('.contact-left',{opacity:1,y:0,duration:1,scrollTrigger:{trigger:'.contact',start:'top 70%'}});
 gsap.to('.contact-right',{opacity:1,y:0,duration:1,delay:.2,scrollTrigger:{trigger:'.contact',start:'top 70%'}});
-
-/* PROCESS LINE - 동적으로 dot 위치에 맞춰 선 배치 */
-function positionProcessLine(){
-  const timeline=document.getElementById('processTimeline');
-  const dots=timeline.querySelectorAll('.step-dot');
-  const existingLine=timeline.querySelector('.process-line');
-  if(existingLine)existingLine.remove();
-
-  if(dots.length<2)return;
-  const line=document.createElement('div');
-  line.classList.add('process-line');
-
-  const isVertical=window.innerWidth<=900;
-  const timelineRect=timeline.getBoundingClientRect();
-
-  if(isVertical){
-    const firstDot=dots[0].getBoundingClientRect();
-    const lastDot=dots[dots.length-1].getBoundingClientRect();
-    const topOffset=firstDot.top+firstDot.height/2-timelineRect.top;
-    const bottomOffset=lastDot.top+lastDot.height/2-timelineRect.top;
-    line.style.width='1px';
-    line.style.height=(bottomOffset-topOffset)+'px';
-    line.style.top=topOffset+'px';
-    line.style.left=(firstDot.left+firstDot.width/2-timelineRect.left)+'px';
-    line.style.background='linear-gradient(to bottom,transparent,rgba(201,184,140,.3),transparent)';
-  }else{
-    const firstDot=dots[0].getBoundingClientRect();
-    const lastDot=dots[dots.length-1].getBoundingClientRect();
-    const leftOffset=firstDot.left+firstDot.width/2-timelineRect.left;
-    const rightOffset=lastDot.left+lastDot.width/2-timelineRect.left;
-    const topOffset=firstDot.top+firstDot.height/2-timelineRect.top;
-    line.style.height='1px';
-    line.style.width=(rightOffset-leftOffset)+'px';
-    line.style.left=leftOffset+'px';
-    line.style.top=topOffset+'px';
-  }
-  timeline.appendChild(line);
-}
-window.addEventListener('load',()=>setTimeout(positionProcessLine,100));
-window.addEventListener('resize',positionProcessLine);
 
 /* MODAL */
 const modal=document.getElementById('videoModal');
