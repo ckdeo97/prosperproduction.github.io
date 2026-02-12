@@ -27,8 +27,20 @@ img{display:block}a{text-decoration:none;color:inherit}
 .cursor-ring{position:fixed;width:36px;height:36px;border:1px solid rgba(201,184,140,.4);border-radius:50%;pointer-events:none;z-index:9998;left:0;top:0;will-change:transform;transition:width .3s var(--ease),height .3s var(--ease),border-color .3s}
 .cursor-ring.hover{width:60px;height:60px;border-color:var(--gold)}
 
+/* INTRO VIDEO LOADER */
+.intro-video-loader{position:fixed;inset:0;background:var(--deep);display:flex;align-items:center;justify-content:center;z-index:3001;opacity:1}
+.intro-video-loader video{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center;
+  display:block;
+}
+
 /* LOADER */
-.loader{position:fixed;inset:0;background:var(--deep);display:flex;align-items:center;justify-content:center;flex-direction:column;z-index:3000}
+.loader{position:fixed;inset:0;background:var(--deep);display:flex;align-items:center;justify-content:center;flex-direction:column;z-index:3000;opacity:0;pointer-events:none}
 .loader-logo{width:120px;opacity:0}
 .loader-line{width:0;height:1px;background:var(--gold);margin:30px 0}
 .loader-text{font-family:var(--serif);font-size:14px;letter-spacing:12px;text-transform:uppercase;color:var(--gold);opacity:0;font-weight:300}
@@ -109,7 +121,6 @@ section{padding:140px 80px;position:relative}
 .process-timeline{display:flex;position:relative;max-width:1000px;margin:0 auto}
 .process-step{flex:1;text-align:center;opacity:0;transform:translateY(30px);position:relative;display:flex;flex-direction:column;align-items:center}
 .step-num{font-family:var(--serif);font-size:11px;letter-spacing:4px;color:var(--gold)}
-/* dot-row: dot과 좌우 선을 한 줄에 배치 */
 .step-dot-row{display:flex;align-items:center;width:100%;margin:18px 0 24px}
 .step-dot-line{flex:1;height:1px;background:rgba(201,184,140,.3)}
 .step-dot-line.invisible{background:transparent}
@@ -200,7 +211,19 @@ footer{background:var(--deep);padding:40px 80px;border-top:1px solid rgba(255,25
 <div class="cursor"></div>
 <div class="cursor-ring"></div>
 
-<div class="loader">
+<!-- INTRO VIDEO LOADER -->
+<div class="intro-video-loader" id="introVideoLoader">
+  <video
+    id="introVideo"
+    src="assets/intro.mp4"
+    autoplay
+    muted
+    playsinline
+    preload="auto"
+  ></video>
+</div>
+
+<div class="loader" id="mainLoader">
   <img class="loader-logo" src="assets/simbol_main.png" alt="PP">
   <div class="loader-line"></div>
   <div class="loader-text">Prosper Production</div>
@@ -350,13 +373,57 @@ footer{background:var(--deep);padding:40px 80px;border-top:1px solid rgba(255,25
 <script>
 gsap.registerPlugin(ScrollTrigger);
 
-/* LOADER */
-const loaderTL=gsap.timeline();
-loaderTL
-  .to('.loader-logo',{opacity:1,duration:1,ease:'power2.out'})
-  .to('.loader-line',{width:60,duration:.8,ease:'power2.inOut'},'-=.3')
-  .to('.loader-text',{opacity:1,duration:.8},'-=.4')
-  .to('.loader',{opacity:0,duration:.8,delay:.8,onComplete:()=>{document.querySelector('.loader').style.display='none';revealHero()}});
+/* ── INTRO VIDEO → LOADER 시퀀스 ── */
+(function(){
+  const introEl   = document.getElementById('introVideoLoader');
+  const introVid  = document.getElementById('introVideo');
+  const mainLoader= document.getElementById('mainLoader');
+
+  /* 인트로 영상이 로드되지 않을 경우를 대비한 fallback 타이머 */
+  let fallbackTimer = null;
+
+  function dissolveToLoader(){
+    /* intro → 로더 디졸브 (1초) */
+    gsap.to(introEl, {
+      opacity: 0,
+      duration: 1,
+      ease: 'power2.inOut',
+      onComplete: () => {
+        introEl.style.display = 'none';
+        introVid.pause();
+        introVid.src = ''; // 메모리 해제
+        startLoader();
+      }
+    });
+  }
+
+  function startLoader(){
+    /* 로더 페이드인 → 기존 로더 시퀀스 실행 */
+    gsap.set(mainLoader, { opacity: 1, pointerEvents: 'auto' });
+
+    const loaderTL = gsap.timeline();
+    loaderTL
+      .to('.loader-logo',  { opacity:1, duration:1, ease:'power2.out' })
+      .to('.loader-line',  { width:60,  duration:.8, ease:'power2.inOut' }, '-=.3')
+      .to('.loader-text',  { opacity:1, duration:.8 }, '-=.4')
+      .to('.loader',       { opacity:0, duration:.8, delay:.8,
+          onComplete: () => {
+            document.querySelector('.loader').style.display = 'none';
+            revealHero();
+          }
+      });
+  }
+
+  /* 2초 후 디졸브 시작 (영상 길이와 무관하게 정확히 2초) */
+  introVid.addEventListener('canplay', function onCanPlay(){
+    introVid.removeEventListener('canplay', onCanPlay);
+    clearTimeout(fallbackTimer);
+    fallbackTimer = setTimeout(dissolveToLoader, 2000);
+  });
+
+  /* 영상 로드 실패 또는 지연 시 3초 후 강제 진행 */
+  fallbackTimer = setTimeout(dissolveToLoader, 3000);
+})();
 
 function revealHero(){
   const heroTL=gsap.timeline();
@@ -452,7 +519,7 @@ document.getElementById('contactForm').addEventListener('submit',function(e){
 function showToast(){document.getElementById('toast').classList.add('show')}
 function closeToast(){document.getElementById('toast').classList.remove('show')}
 
-/* CURSOR - 안쪽 즉시, 바깥 따라옴 */
+/* CURSOR */
 const cursor=document.querySelector('.cursor');
 const ring=document.querySelector('.cursor-ring');
 document.addEventListener('mousemove',e=>{
