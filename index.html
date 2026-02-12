@@ -6,13 +6,11 @@
 <title>PROSPER PRODUCTION</title>
 <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
 <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Noto+Sans+KR:wght@200;300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-
 <style>
 :root{--navy:#0f1625;--deep:#0a0f1a;--cream:#f5f0e8;--gold:#c9b88c;--gold-light:#ddd0b3;--text-light:#b8bcc8;--serif:'Cormorant Garamond',serif;--sans:'Noto Sans KR',sans-serif;--ease:cubic-bezier(.22,1,.36,1);--ease-out:cubic-bezier(.16,1,.3,1)}
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -22,16 +20,14 @@ body{font-family:var(--sans);background:var(--navy);color:#fff;overflow-x:hidden
 ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--navy)}::-webkit-scrollbar-thumb{background:var(--gold);border-radius:2px}
 img{display:block}a{text-decoration:none;color:inherit}
 
-/* CURSOR */
-.cursor{position:fixed;width:6px;height:6px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;mix-blend-mode:difference;left:0;top:0;will-change:transform}
-.cursor-ring{position:fixed;width:36px;height:36px;border:1px solid rgba(201,184,140,.4);border-radius:50%;pointer-events:none;z-index:9998;left:0;top:0;will-change:transform;transition:width .3s var(--ease),height .3s var(--ease),border-color .3s}
+/* CURSOR - ring 중앙정렬 수정 */
+.cursor{position:fixed;width:6px;height:6px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;mix-blend-mode:difference;left:0;top:0;will-change:transform;transform:translate(-50%,-50%)}
+.cursor-ring{position:fixed;width:36px;height:36px;border:1px solid rgba(201,184,140,.4);border-radius:50%;pointer-events:none;z-index:9998;left:0;top:0;will-change:transform;transform:translate(-50%,-50%);transition:width .3s var(--ease),height .3s var(--ease),border-color .3s,margin .3s var(--ease)}
 .cursor-ring.hover{width:60px;height:60px;border-color:var(--gold)}
 
-/* LOADER */
-.loader{position:fixed;inset:0;background:var(--deep);display:flex;align-items:center;justify-content:center;flex-direction:column;z-index:3000}
-.loader-logo{width:120px;opacity:0}
-.loader-line{width:0;height:1px;background:var(--gold);margin:30px 0}
-.loader-text{font-family:var(--serif);font-size:14px;letter-spacing:12px;text-transform:uppercase;color:var(--gold);opacity:0;font-weight:300}
+/* VIDEO LOADER */
+.video-loader{position:fixed;inset:0;z-index:3000;background:#000;display:flex;align-items:center;justify-content:center}
+.video-loader video{width:100%;height:100%;object-fit:cover}
 
 /* NAV */
 nav{position:fixed;width:100%;padding:32px 60px;display:flex;justify-content:space-between;align-items:center;z-index:1000;transition:all .5s var(--ease)}
@@ -96,27 +92,40 @@ section{padding:140px 80px;position:relative}
 .portfolio-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:80px}
 .portfolio-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:40px}
 .portfolio-item{position:relative;padding-bottom:56.25%;overflow:hidden;border-radius:4px;opacity:0;transform:translateY(60px);cursor:pointer}
+.portfolio-item.hidden-item{display:none}
 .portfolio-item::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(10,15,26,.6) 0%,transparent 50%);z-index:1;pointer-events:none;transition:opacity .5s}
 .portfolio-item:hover::after{opacity:0}
 .portfolio-item iframe{position:absolute;width:100%;height:100%;top:0;left:0;border:none;transition:transform .8s var(--ease);pointer-events:none}
 .portfolio-item:hover iframe{transform:scale(1.05)}
 .portfolio-label{display:none}
+/* More 버튼 */
+.portfolio-more-wrap{text-align:center;margin-top:60px}
+.portfolio-more{background:transparent;border:1px solid rgba(201,184,140,.3);color:var(--gold);padding:14px 56px;font-family:var(--serif);font-size:13px;letter-spacing:4px;text-transform:uppercase;cursor:pointer;transition:all .5s var(--ease)}
+.portfolio-more:hover{background:var(--gold);color:var(--navy);border-color:var(--gold)}
+.portfolio-more-wrap.all-visible{display:none}
 
-/* PROCESS */
+/* PROCESS - 선/점 정렬 보장 + 자연스러운 애니메이션 */
 .process{background:var(--navy)}
 .process-header{text-align:center;margin-bottom:100px}
 .process-header .section-desc{margin:0 auto;text-align:center}
-.process-timeline{display:flex;position:relative;max-width:1000px;margin:0 auto}
-.process-step{flex:1;text-align:center;opacity:0;transform:translateY(30px);position:relative;display:flex;flex-direction:column;align-items:center}
-.step-num{font-family:var(--serif);font-size:11px;letter-spacing:4px;color:var(--gold)}
-/* dot-row: dot과 좌우 선을 한 줄에 배치 */
+.process-timeline{display:flex;position:relative;max-width:1000px;margin:0 auto;overflow:hidden}
+.process-step{flex:1;text-align:center;position:relative;display:flex;flex-direction:column;align-items:center}
+.step-num{font-family:var(--serif);font-size:11px;letter-spacing:4px;color:var(--gold);opacity:0;transform:translateY(10px);transition:opacity .6s ease,transform .6s ease}
 .step-dot-row{display:flex;align-items:center;width:100%;margin:18px 0 24px}
-.step-dot-line{flex:1;height:1px;background:rgba(201,184,140,.3)}
-.step-dot-line.invisible{background:transparent}
-.step-dot{width:12px;height:12px;border:1px solid var(--gold);border-radius:50%;position:relative;background:var(--navy);flex-shrink:0}
+.step-dot-line{flex:1;height:1px;background:rgba(201,184,140,.3);transform:scaleX(0);transition:transform .8s ease}
+.step-dot-line.from-right{transform-origin:right center}
+.step-dot-line.from-left{transform-origin:left center}
+.step-dot-line.invisible{background:transparent!important}
+.step-dot{width:12px;height:12px;border:1px solid var(--gold);border-radius:50%;position:relative;background:var(--navy);flex-shrink:0;opacity:0;transform:scale(0);transition:opacity .4s ease,transform .4s ease}
 .step-dot::after{content:'';position:absolute;width:4px;height:4px;background:var(--gold);border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%)}
-.step-title{font-family:var(--serif);font-size:20px;font-weight:400;margin-bottom:12px;letter-spacing:1px}
-.step-desc{font-size:12px;color:var(--text-light);line-height:1.7;font-weight:300}
+.step-title{font-family:var(--serif);font-size:20px;font-weight:400;margin-bottom:12px;letter-spacing:1px;opacity:0;transform:translateY(10px);transition:opacity .6s ease,transform .6s ease}
+.step-desc{font-size:12px;color:var(--text-light);line-height:1.7;font-weight:300;opacity:0;transition:opacity .6s ease}
+/* 애니메이션 활성 */
+.process-step.revealed .step-num{opacity:1;transform:translateY(0)}
+.process-step.revealed .step-dot{opacity:1;transform:scale(1)}
+.process-step.revealed .step-dot-line{transform:scaleX(1)}
+.process-step.revealed .step-title{opacity:1;transform:translateY(0)}
+.process-step.revealed .step-desc{opacity:1}
 
 /* CONTACT */
 .contact{background:var(--deep);display:grid;grid-template-columns:1fr 1fr;gap:100px}
@@ -177,14 +186,15 @@ footer{background:var(--deep);padding:40px 80px;border-top:1px solid rgba(255,25
   .portfolio-grid{grid-template-columns:1fr}
   .contact{grid-template-columns:1fr;gap:60px}
   .form-row{grid-template-columns:1fr}
-  .process-timeline{flex-direction:column;gap:0;padding-left:0}
-  .process-step{text-align:left;padding-left:0;flex-direction:row;flex-wrap:wrap;align-items:flex-start}
-  .step-dot-row{flex-direction:column;width:auto;margin:0;position:absolute;left:0;top:0;height:100%;align-items:center}
-  .step-dot-line{flex:1;width:1px;height:auto}
-  .step-dot-line.invisible{background:transparent}
-  .process-step{padding-left:50px;position:relative;padding-bottom:40px;align-items:flex-start}
+  .process-timeline{flex-direction:column;gap:0;padding-left:50px;overflow:visible}
+  .step-dot-row{flex-direction:column;width:auto;margin:0;position:absolute;left:-50px;top:0;height:100%;align-items:center}
+  .step-dot-line{flex:1;width:1px;height:auto;transform:scaleY(0);transform-origin:top center}
+  .step-dot-line.from-right{transform-origin:top center}
+  .step-dot-line.from-left{transform-origin:bottom center}
+  .process-step.revealed .step-dot-line{transform:scaleY(1)}
+  .process-step{text-align:left;padding-bottom:50px;align-items:flex-start}
   .process-step .step-num{margin-bottom:4px}
-  .modal-container{width:95vw}.modal-close{top:-40px;font-size:11px}
+  .modal-container{width:95vw}.modal-close{top:-30px;font-size:11px}
   footer{flex-direction:column;gap:16px;text-align:center}
 }
 @media(max-width:600px){
@@ -194,18 +204,19 @@ footer{background:var(--deep);padding:40px 80px;border-top:1px solid rgba(255,25
 }
 </style>
 </head>
-
 <body>
 
 <div class="cursor"></div>
 <div class="cursor-ring"></div>
 
-<div class="loader">
-  <img class="loader-logo" src="assets/simbol_main.png" alt="PP">
-  <div class="loader-line"></div>
-  <div class="loader-text">Prosper Production</div>
+<!-- VIDEO LOADER -->
+<div class="video-loader" id="videoLoader">
+  <video id="introVideo" autoplay muted playsinline>
+    <source src="assets/intro.mp4" type="video/mp4">
+  </video>
 </div>
 
+<!-- NAV -->
 <nav>
   <img class="nav-logo" src="assets/typologo_white.png" alt="Prosper Production">
   <ul class="nav-links">
@@ -216,6 +227,7 @@ footer{background:var(--deep);padding:40px 80px;border-top:1px solid rgba(255,25
   </ul>
 </nav>
 
+<!-- HERO -->
 <section class="hero">
   <div class="hero-bg"></div>
   <div class="hero-grain"></div>
@@ -223,24 +235,17 @@ footer{background:var(--deep);padding:40px 80px;border-top:1px solid rgba(255,25
   <div class="hero-content">
     <img class="hero-logo-mark" src="assets/simbol_main.png" alt="PP">
     <div class="hero-divider"></div>
-    <h1 class="hero-title">
-      Prosper
-      <span>Production</span>
-    </h1>
+    <h1 class="hero-title">Prosper<span>Production</span></h1>
     <p class="hero-sub">Brand Film &middot; Commercial &middot; Creative Planning</p>
   </div>
-  <div class="hero-scroll">
-    <span>Scroll</span>
-    <div class="scroll-line"></div>
-  </div>
+  <div class="hero-scroll"><span>Scroll</span><div class="scroll-line"></div></div>
 </section>
 
+<!-- ABOUT -->
 <section class="about" id="about">
   <div class="about-visual">
     <div class="about-frame"></div>
-    <div class="about-image">
-      <img src="assets/simbol_main.png" alt="PP">
-    </div>
+    <div class="about-image"><img src="assets/simbol_main.png" alt="PP"></div>
   </div>
   <div class="about-text">
     <span class="section-label">About Us</span>
@@ -248,12 +253,13 @@ footer{background:var(--deep);padding:40px 80px;border-top:1px solid rgba(255,25
     <p class="section-desc">Prosper Production은 브랜드 필름, 광고, 크리에이티브 기획을 전문으로 하는 영상 프로덕션입니다. 단순한 영상 제작을 넘어, 고객사의 본질적인 니즈를 깊이 이해하고 최적화된 크리에이티브 솔루션을 설계합니다.</p>
     <div class="about-stats">
       <div><div class="stat-num">150<span style="font-size:24px">+</span></div><div class="stat-label">프로젝트 완료</div></div>
-      <div><div class="stat-num">50<span style="font-size:24px">+</span></div><div class="stat-label">브랜드 파트너</div></div>
-      <div><div class="stat-num">7</div><div class="stat-label">크리에이티브 팀</div></div>
+      <div><div class="stat-num">20<span style="font-size:24px">+</span></div><div class="stat-label">브랜드 파트너</div></div>
+      <div><div class="stat-num">5</div><div class="stat-label">크리에이티브 팀</div></div>
     </div>
   </div>
 </section>
 
+<!-- SERVICES -->
 <section class="services" id="services">
   <div class="services-header">
     <span class="section-label">Our Services</span>
@@ -268,21 +274,23 @@ footer{background:var(--deep);padding:40px 80px;border-top:1px solid rgba(255,25
   </div>
 </section>
 
+<!-- PORTFOLIO -->
 <section class="portfolio" id="portfolio">
   <div class="portfolio-header">
-    <div>
-      <span class="section-label">Selected Works</span>
-      <h2 class="section-title">Portfolio</h2>
-    </div>
+    <div><span class="section-label">Selected Works</span><h2 class="section-title">Portfolio</h2></div>
   </div>
-  <div class="portfolio-grid">
-    <div class="portfolio-item" data-video="1163933222"><iframe src="https://player.vimeo.com/video/1163933222?background=1&muted=1" allow="autoplay"></iframe><div class="portfolio-label">Project 01</div></div>
-    <div class="portfolio-item" data-video="1163933402"><iframe src="https://player.vimeo.com/video/1163933402?background=1&muted=1" allow="autoplay"></iframe><div class="portfolio-label">Project 02</div></div>
-    <div class="portfolio-item" data-video="1163933341"><iframe src="https://player.vimeo.com/video/1163933341?background=1&muted=1" allow="autoplay"></iframe><div class="portfolio-label">Project 03</div></div>
-    <div class="portfolio-item" data-video="1163933252"><iframe src="https://player.vimeo.com/video/1163933252?background=1&muted=1" allow="autoplay"></iframe><div class="portfolio-label">Project 04</div></div>
+  <div class="portfolio-grid" id="portfolioGrid">
+    <div class="portfolio-item" data-video="1163933222"><iframe src="https://player.vimeo.com/video/1163933222?background=1&muted=1" allow="autoplay"></iframe></div>
+    <div class="portfolio-item" data-video="1163933402"><iframe src="https://player.vimeo.com/video/1163933402?background=1&muted=1" allow="autoplay"></iframe></div>
+    <div class="portfolio-item" data-video="1163933341"><iframe src="https://player.vimeo.com/video/1163933341?background=1&muted=1" allow="autoplay"></iframe></div>
+    <div class="portfolio-item" data-video="1163933252"><iframe src="https://player.vimeo.com/video/1163933252?background=1&muted=1" allow="autoplay"></iframe></div>
+  </div>
+  <div class="portfolio-more-wrap" id="portfolioMoreWrap">
+    <button class="portfolio-more" id="portfolioMoreBtn">More</button>
   </div>
 </section>
 
+<!-- PROCESS -->
 <section class="process" id="process">
   <div class="process-header">
     <span class="section-label">How We Work</span>
@@ -290,14 +298,15 @@ footer{background:var(--deep);padding:40px 80px;border-top:1px solid rgba(255,25
     <p class="section-desc">고객사의 만족을 최우선으로, 체계적인 프로세스로 완성도 높은 결과물을 만듭니다.</p>
   </div>
   <div class="process-timeline" id="processTimeline">
-    <div class="process-step"><div class="step-num">01</div><div class="step-dot-row"><div class="step-dot-line invisible"></div><div class="step-dot"></div><div class="step-dot-line"></div></div><div class="step-title">사전 미팅</div><div class="step-desc">브랜드 DNA, 톤앤매너,<br>방향성을 깊이 파악합니다</div></div>
-    <div class="process-step"><div class="step-num">02</div><div class="step-dot-row"><div class="step-dot-line"></div><div class="step-dot"></div><div class="step-dot-line"></div></div><div class="step-title">기획 &amp; 섭외</div><div class="step-desc">스토리텔링 기반의<br>크리에이티브 전략 수립</div></div>
-    <div class="process-step"><div class="step-num">03</div><div class="step-dot-row"><div class="step-dot-line"></div><div class="step-dot"></div><div class="step-dot-line"></div></div><div class="step-title">디자인 컨펌</div><div class="step-desc">시안 공유 및 수정을 통한<br>사전 검증 프로세스</div></div>
-    <div class="process-step"><div class="step-num">04</div><div class="step-dot-row"><div class="step-dot-line"></div><div class="step-dot"></div><div class="step-dot-line"></div></div><div class="step-title">촬영 &amp; 편집</div><div class="step-desc">전문 장비와 기술로<br>최상의 퀄리티 구현</div></div>
-    <div class="process-step"><div class="step-num">05</div><div class="step-dot-row"><div class="step-dot-line"></div><div class="step-dot"></div><div class="step-dot-line invisible"></div></div><div class="step-title">시사 &amp; 납품</div><div class="step-desc">최종 피드백 반영 후<br>완성본 전달</div></div>
+    <div class="process-step"><div class="step-num">01</div><div class="step-dot-row"><div class="step-dot-line invisible"></div><div class="step-dot"></div><div class="step-dot-line from-left"></div></div><div class="step-title">사전 미팅</div><div class="step-desc">브랜드 DNA, 톤앤매너,<br>방향성을 깊이 파악합니다</div></div>
+    <div class="process-step"><div class="step-num">02</div><div class="step-dot-row"><div class="step-dot-line from-right"></div><div class="step-dot"></div><div class="step-dot-line from-left"></div></div><div class="step-title">기획 &amp; 섭외</div><div class="step-desc">스토리텔링 기반의<br>크리에이티브 전략 수립</div></div>
+    <div class="process-step"><div class="step-num">03</div><div class="step-dot-row"><div class="step-dot-line from-right"></div><div class="step-dot"></div><div class="step-dot-line from-left"></div></div><div class="step-title">디자인 컨펌</div><div class="step-desc">시안 공유 및 수정을 통한<br>사전 검증 프로세스</div></div>
+    <div class="process-step"><div class="step-num">04</div><div class="step-dot-row"><div class="step-dot-line from-right"></div><div class="step-dot"></div><div class="step-dot-line from-left"></div></div><div class="step-title">촬영 &amp; 편집</div><div class="step-desc">전문 장비와 기술로<br>최상의 퀄리티 구현</div></div>
+    <div class="process-step"><div class="step-num">05</div><div class="step-dot-row"><div class="step-dot-line from-right"></div><div class="step-dot"></div><div class="step-dot-line invisible"></div></div><div class="step-title">시사 &amp; 납품</div><div class="step-desc">최종 피드백 반영 후<br>완성본 전달</div></div>
   </div>
 </section>
 
+<!-- CONTACT (주소 제거) -->
 <section class="contact" id="contact">
   <div class="contact-left">
     <span class="section-label">Get in Touch</span>
@@ -305,7 +314,6 @@ footer{background:var(--deep);padding:40px 80px;border-top:1px solid rgba(255,25
     <div class="contact-info">
       <div class="contact-item"><span class="contact-item-label">Email</span><span class="contact-item-value">prosper@prosperproduction.com</span></div>
       <div class="contact-item"><span class="contact-item-label">Phone</span><span class="contact-item-value">010-3440-4318</span></div>
-      <div class="contact-item"><span class="contact-item-label">Address</span><span class="contact-item-value">서울특별시 구로구 구일로 4길 65</span></div>
     </div>
   </div>
   <div class="contact-right">
@@ -325,6 +333,7 @@ footer{background:var(--deep);padding:40px 80px;border-top:1px solid rgba(255,25
   </div>
 </section>
 
+<!-- TOAST -->
 <div class="toast-overlay" id="toast">
   <div class="toast-box">
     <div class="toast-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
@@ -334,11 +343,13 @@ footer{background:var(--deep);padding:40px 80px;border-top:1px solid rgba(255,25
   </div>
 </div>
 
+<!-- FOOTER -->
 <footer>
   <img class="footer-logo" src="assets/typologo_white.png" alt="Prosper Production">
   <span class="footer-copy">&copy; 2024 Prosper Production. All Rights Reserved.</span>
 </footer>
 
+<!-- MODAL -->
 <div class="modal" id="videoModal">
   <div class="modal-container">
     <div class="modal-close" id="modalCloseBtn"><span>Close</span><div class="modal-close-x"></div></div>
@@ -351,126 +362,191 @@ footer{background:var(--deep);padding:40px 80px;border-top:1px solid rgba(255,25
 <script>
 gsap.registerPlugin(ScrollTrigger);
 
-/* LOADER */
-const loaderTL=gsap.timeline();
-loaderTL
-  .to('.loader-logo',{opacity:1,duration:1,ease:'power2.out'})
-  .to('.loader-line',{width:60,duration:.8,ease:'power2.inOut'},'-=.3')
-  .to('.loader-text',{opacity:1,duration:.8},'-=.4')
-  .to('.loader',{opacity:0,duration:.8,delay:.8,onComplete:()=>{document.querySelector('.loader').style.display='none';revealHero()}});
+/* ── VIDEO LOADER: 2초 재생 후 0.5초 페이드아웃 ── */
+const introVideo = document.getElementById('introVideo');
+const videoLoader = document.getElementById('videoLoader');
 
-function revealHero(){
-  const heroTL=gsap.timeline();
+introVideo.addEventListener('timeupdate', function() {
+  if (this.currentTime >= 2 && !videoLoader.classList.contains('fading')) {
+    videoLoader.classList.add('fading');
+    gsap.to(videoLoader, {
+      opacity: 0,
+      duration: 0.5,
+      ease: 'power2.inOut',
+      onComplete: () => {
+        videoLoader.style.display = 'none';
+        introVideo.pause();
+        revealHero();
+      }
+    });
+  }
+});
+// fallback: 영상 로드 실패 시 바로 표시
+introVideo.addEventListener('error', () => {
+  videoLoader.style.display = 'none';
+  revealHero();
+});
+// fallback: 3초 지나도 안되면 강제
+setTimeout(() => {
+  if (videoLoader.style.display !== 'none') {
+    videoLoader.classList.add('fading');
+    gsap.to(videoLoader, { opacity: 0, duration: 0.5, onComplete: () => { videoLoader.style.display = 'none'; revealHero(); } });
+  }
+}, 3500);
+
+/* ── HERO REVEAL ── */
+let heroRevealed = false;
+function revealHero() {
+  if (heroRevealed) return;
+  heroRevealed = true;
+  const heroTL = gsap.timeline();
   heroTL
-    .to('.hero-logo-mark',{opacity:1,scale:1,duration:1.2,ease:'power2.out'})
-    .to('.hero-divider',{width:80,duration:1,ease:'power2.inOut'},'-=.6')
-    .to('.hero-title',{opacity:1,y:0,duration:1,ease:'power2.out'},'-=.5')
-    .to('.hero-sub',{opacity:1,duration:.8},'-=.3')
-    .to('.hero-scroll',{opacity:1,duration:.6},'-=.2')
-    .to('.nav-logo',{opacity:1,duration:.6},'-=.4');
+    .to('.hero-logo-mark', { opacity: 1, scale: 1, duration: 1.2, ease: 'power2.out' })
+    .to('.hero-divider', { width: 80, duration: 1, ease: 'power2.inOut' }, '-=.6')
+    .to('.hero-title', { opacity: 1, y: 0, duration: 1, ease: 'power2.out' }, '-=.5')
+    .to('.hero-sub', { opacity: 1, duration: .8 }, '-=.3')
+    .to('.hero-scroll', { opacity: 1, duration: .6 }, '-=.2')
+    .to('.nav-logo', { opacity: 1, duration: .6 }, '-=.4');
 }
 
-/* NAV */
-window.addEventListener('scroll',()=>{document.querySelector('nav').classList.toggle('scrolled',window.scrollY>80)});
+/* ── NAV ── */
+window.addEventListener('scroll', () => { document.querySelector('nav').classList.toggle('scrolled', window.scrollY > 80); });
 
-/* HERO PARALLAX */
-document.addEventListener('mousemove',(e)=>{
-  const cx=(e.clientX-window.innerWidth/2)/window.innerWidth;
-  const cy=(e.clientY-window.innerHeight/2)/window.innerHeight;
-  gsap.to('.hero-logo-mark',{x:cx*20,y:cy*20,duration:1,ease:'power2.out'});
-  gsap.to('.hero-title',{x:cx*10,y:cy*10,duration:1.2,ease:'power2.out'});
+/* ── HERO PARALLAX ── */
+document.addEventListener('mousemove', (e) => {
+  const cx = (e.clientX - window.innerWidth / 2) / window.innerWidth;
+  const cy = (e.clientY - window.innerHeight / 2) / window.innerHeight;
+  gsap.to('.hero-logo-mark', { x: cx * 20, y: cy * 20, duration: 1, ease: 'power2.out' });
+  gsap.to('.hero-title', { x: cx * 10, y: cy * 10, duration: 1.2, ease: 'power2.out' });
 });
 
-/* PARTICLES */
-(function(){
-  const c=document.getElementById('particles');
-  for(let i=0;i<30;i++){
-    const p=document.createElement('div');p.classList.add('particle');
-    p.style.left=Math.random()*100+'%';p.style.top=Math.random()*100+'%';c.appendChild(p);
-    gsap.to(p,{opacity:Math.random()*.4+.1,duration:Math.random()*3+2,repeat:-1,yoyo:true,delay:Math.random()*3});
-    gsap.to(p,{y:-60-Math.random()*40,x:(Math.random()-.5)*30,duration:Math.random()*6+4,repeat:-1,yoyo:true,ease:'sine.inOut'});
+/* ── PARTICLES ── */
+(function() {
+  const c = document.getElementById('particles');
+  for (let i = 0; i < 30; i++) {
+    const p = document.createElement('div'); p.classList.add('particle');
+    p.style.left = Math.random() * 100 + '%'; p.style.top = Math.random() * 100 + '%'; c.appendChild(p);
+    gsap.to(p, { opacity: Math.random() * .4 + .1, duration: Math.random() * 3 + 2, repeat: -1, yoyo: true, delay: Math.random() * 3 });
+    gsap.to(p, { y: -60 - Math.random() * 40, x: (Math.random() - .5) * 30, duration: Math.random() * 6 + 4, repeat: -1, yoyo: true, ease: 'sine.inOut' });
   }
 })();
 
-/* SCROLL ANIMATIONS */
-gsap.to('.about-text',{opacity:1,y:0,duration:1.2,scrollTrigger:{trigger:'.about',start:'top 70%'}});
-gsap.to('.about-frame',{rotation:2,duration:1,scrollTrigger:{trigger:'.about',start:'top 70%'}});
+/* ── SCROLL ANIMATIONS ── */
+gsap.to('.about-text', { opacity: 1, y: 0, duration: 1.2, scrollTrigger: { trigger: '.about', start: 'top 70%' } });
+gsap.to('.about-frame', { rotation: 2, duration: 1, scrollTrigger: { trigger: '.about', start: 'top 70%' } });
 
-gsap.utils.toArray('.service-card').forEach((el,i)=>{
-  gsap.to(el,{opacity:1,y:0,duration:1,delay:i*.12,scrollTrigger:{trigger:el,start:'top 85%'}});
+gsap.utils.toArray('.service-card').forEach((el, i) => {
+  gsap.to(el, { opacity: 1, y: 0, duration: 1, delay: i * .12, scrollTrigger: { trigger: el, start: 'top 85%' } });
 });
 
-gsap.utils.toArray('.portfolio-item').forEach((el,i)=>{
-  gsap.to(el,{opacity:1,y:0,duration:1,delay:i*.15,scrollTrigger:{trigger:el,start:'top 85%'}});
+gsap.utils.toArray('.portfolio-item:not(.hidden-item)').forEach((el, i) => {
+  gsap.to(el, { opacity: 1, y: 0, duration: 1, delay: i * .15, scrollTrigger: { trigger: el, start: 'top 85%' } });
 });
 
-gsap.utils.toArray('.process-step').forEach((el,i)=>{
-  gsap.to(el,{opacity:1,y:0,duration:.8,delay:i*.15,scrollTrigger:{trigger:'.process-timeline',start:'top 80%'}});
+/* ── PROCESS ANIMATION - CSS transition 기반으로 정렬 깨지지 않음 ── */
+ScrollTrigger.create({
+  trigger: '.process-timeline',
+  start: 'top 80%',
+  once: true,
+  onEnter: () => {
+    const steps = document.querySelectorAll('.process-step');
+    steps.forEach((step, i) => {
+      setTimeout(() => { step.classList.add('revealed'); }, i * 250);
+    });
+  }
 });
 
-gsap.to('.contact-left',{opacity:1,y:0,duration:1,scrollTrigger:{trigger:'.contact',start:'top 70%'}});
-gsap.to('.contact-right',{opacity:1,y:0,duration:1,delay:.2,scrollTrigger:{trigger:'.contact',start:'top 70%'}});
+gsap.to('.contact-left', { opacity: 1, y: 0, duration: 1, scrollTrigger: { trigger: '.contact', start: 'top 70%' } });
+gsap.to('.contact-right', { opacity: 1, y: 0, duration: 1, delay: .2, scrollTrigger: { trigger: '.contact', start: 'top 70%' } });
 
-/* MODAL */
-const modal=document.getElementById('videoModal');
-const modalIframe=document.getElementById('modalIframe');
-const modalCloseBtn=document.getElementById('modalCloseBtn');
+/* ── PORTFOLIO MORE BUTTON ── */
+(function() {
+  const grid = document.getElementById('portfolioGrid');
+  const items = grid.querySelectorAll('.portfolio-item');
+  const moreWrap = document.getElementById('portfolioMoreWrap');
+  const moreBtn = document.getElementById('portfolioMoreBtn');
+  const MAX_VISIBLE = 4;
 
-function openModal(videoId){
-  modalIframe.src='https://player.vimeo.com/video/'+videoId+'?autoplay=1&title=0&byline=0&portrait=0&color=c9b88c';
+  if (items.length <= MAX_VISIBLE) {
+    moreWrap.classList.add('all-visible');
+  } else {
+    items.forEach((item, i) => {
+      if (i >= MAX_VISIBLE) item.classList.add('hidden-item');
+    });
+  }
+
+  moreBtn.addEventListener('click', () => {
+    const hiddenItems = grid.querySelectorAll('.portfolio-item.hidden-item');
+    let shown = 0;
+    hiddenItems.forEach((item, i) => {
+      if (shown < MAX_VISIBLE) {
+        item.classList.remove('hidden-item');
+        gsap.fromTo(item, { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 1, delay: i * .15 });
+        shown++;
+      }
+    });
+    const remaining = grid.querySelectorAll('.portfolio-item.hidden-item');
+    if (remaining.length === 0) moreWrap.classList.add('all-visible');
+  });
+})();
+
+/* ── MODAL ── */
+const modal = document.getElementById('videoModal');
+const modalIframe = document.getElementById('modalIframe');
+const modalCloseBtn = document.getElementById('modalCloseBtn');
+
+function openModal(videoId) {
+  modalIframe.src = 'https://player.vimeo.com/video/' + videoId + '?autoplay=1&title=0&byline=0&portrait=0&color=c9b88c';
   modal.classList.add('active');
-  document.body.style.overflow='hidden';
+  document.body.style.overflow = 'hidden';
 }
-function closeModal(){
+function closeModal() {
   modal.classList.remove('active');
-  document.body.style.overflow='';
-  setTimeout(()=>{modalIframe.src=''},500);
+  document.body.style.overflow = '';
+  setTimeout(() => { modalIframe.src = ''; }, 500);
 }
-document.querySelectorAll('.portfolio-item').forEach(item=>{
-  item.addEventListener('click',()=>openModal(item.dataset.video));
+document.querySelectorAll('.portfolio-item').forEach(item => {
+  item.addEventListener('click', () => openModal(item.dataset.video));
 });
-modalCloseBtn.addEventListener('click',closeModal);
-modal.addEventListener('click',(e)=>{if(e.target===modal)closeModal()});
-document.addEventListener('keydown',(e)=>{if(e.key==='Escape'&&modal.classList.contains('active'))closeModal()});
+modalCloseBtn.addEventListener('click', closeModal);
+modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.classList.contains('active')) closeModal(); });
 
-/* CONTACT FORM */
-document.getElementById('contactForm').addEventListener('submit',function(e){
+/* ── CONTACT FORM ── */
+document.getElementById('contactForm').addEventListener('submit', function(e) {
   e.preventDefault();
-  const form=this;
-  const btn=form.querySelector('.form-submit');
-  const originalText=btn.textContent;
-  btn.textContent='Sending...';btn.disabled=true;
-
-  const fd={company:form.company.value,name:form.name.value,position:form.position.value,phone:form.phone.value,email:form.email.value,message:form.message.value};
-
-  const subject=encodeURIComponent('[문의] '+fd.company+' - '+fd.name);
-  const body=encodeURIComponent('회사명: '+fd.company+'\n담당자: '+fd.name+'\n직급/직책: '+fd.position+'\n연락처: '+fd.phone+'\n이메일: '+fd.email+'\n\n프로젝트 내용:\n'+fd.message);
-  window.location.href='mailto:prosper@prosperproduction.com?subject='+subject+'&body='+body;
-
-  setTimeout(()=>{showToast();form.reset();btn.textContent=originalText;btn.disabled=false},500);
+  const form = this;
+  const btn = form.querySelector('.form-submit');
+  const originalText = btn.textContent;
+  btn.textContent = 'Sending...'; btn.disabled = true;
+  const fd = { company: form.company.value, name: form.name.value, position: form.position.value, phone: form.phone.value, email: form.email.value, message: form.message.value };
+  const subject = encodeURIComponent('[문의] ' + fd.company + ' - ' + fd.name);
+  const body = encodeURIComponent('회사명: ' + fd.company + '\n담당자: ' + fd.name + '\n직급/직책: ' + fd.position + '\n연락처: ' + fd.phone + '\n이메일: ' + fd.email + '\n\n프로젝트 내용:\n' + fd.message);
+  window.location.href = 'mailto:prosper@prosperproduction.com?subject=' + subject + '&body=' + body;
+  setTimeout(() => { showToast(); form.reset(); btn.textContent = originalText; btn.disabled = false; }, 500);
 });
 
-function showToast(){document.getElementById('toast').classList.add('show')}
-function closeToast(){document.getElementById('toast').classList.remove('show')}
+function showToast() { document.getElementById('toast').classList.add('show'); }
+function closeToast() { document.getElementById('toast').classList.remove('show'); }
 
-/* CURSOR - 안쪽 즉시, 바깥 따라옴 */
-const cursor=document.querySelector('.cursor');
-const ring=document.querySelector('.cursor-ring');
-document.addEventListener('mousemove',e=>{
-  gsap.set(cursor,{x:e.clientX-3,y:e.clientY-3});
-  gsap.to(ring,{x:e.clientX-18,y:e.clientY-18,duration:.5,ease:'power3.out'});
+/* ── CURSOR - transform translate(-50%,-50%) 기반 중앙 정렬 ── */
+const cursor = document.querySelector('.cursor');
+const ring = document.querySelector('.cursor-ring');
+document.addEventListener('mousemove', e => {
+  gsap.set(cursor, { left: e.clientX, top: e.clientY });
+  gsap.to(ring, { left: e.clientX, top: e.clientY, duration: .5, ease: 'power3.out' });
 });
-document.querySelectorAll('a, button, .portfolio-item, .service-card').forEach(el=>{
-  el.addEventListener('mouseenter',()=>ring.classList.add('hover'));
-  el.addEventListener('mouseleave',()=>ring.classList.remove('hover'));
+document.querySelectorAll('a, button, .portfolio-item, .service-card').forEach(el => {
+  el.addEventListener('mouseenter', () => ring.classList.add('hover'));
+  el.addEventListener('mouseleave', () => ring.classList.remove('hover'));
 });
 
-/* SMOOTH SCROLL */
-document.querySelectorAll('.nav-links a').forEach(link=>{
-  link.addEventListener('click',(e)=>{
+/* ── SMOOTH SCROLL ── */
+document.querySelectorAll('.nav-links a').forEach(link => {
+  link.addEventListener('click', (e) => {
     e.preventDefault();
-    const target=document.querySelector(link.getAttribute('href'));
-    if(target)target.scrollIntoView({behavior:'smooth'});
+    const target = document.querySelector(link.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth' });
   });
 });
 </script>
