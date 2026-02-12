@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PROSPER PRODUCTION</title>
-<link rel="icon" type="image/x-icon" href="assets/favicon.ico">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="assets/simbol_navy.png">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/simbol_navy.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Noto+Sans+KR:wght@200;300;400;500;600&display=swap" rel="stylesheet">
@@ -39,11 +39,6 @@ img{display:block}a{text-decoration:none;color:inherit}
   display:block;
 }
 
-/* LOADER */
-.loader{position:fixed;inset:0;background:var(--deep);display:flex;align-items:center;justify-content:center;flex-direction:column;z-index:3000;opacity:0;pointer-events:none}
-.loader-logo{width:120px;opacity:0}
-.loader-line{width:0;height:1px;background:var(--gold);margin:30px 0}
-.loader-text{font-family:var(--serif);font-size:14px;letter-spacing:12px;text-transform:uppercase;color:var(--gold);opacity:0;font-weight:300}
 
 /* NAV */
 nav{position:fixed;width:100%;padding:32px 60px;display:flex;justify-content:space-between;align-items:center;z-index:1000;transition:all .5s var(--ease)}
@@ -223,11 +218,6 @@ footer{background:var(--deep);padding:40px 80px;border-top:1px solid rgba(255,25
   ></video>
 </div>
 
-<div class="loader" id="mainLoader">
-  <img class="loader-logo" src="assets/simbol_main.png" alt="PP">
-  <div class="loader-line"></div>
-  <div class="loader-text">Prosper Production</div>
-</div>
 
 <nav>
   <img class="nav-logo" src="assets/typologo_white.png" alt="Prosper Production">
@@ -326,7 +316,7 @@ footer{background:var(--deep);padding:40px 80px;border-top:1px solid rgba(255,25
     <span class="section-label">Get in Touch</span>
     <h2 class="section-title">Let's Create<br>Something<br>Remarkable</h2>
     <div class="contact-info">
-      <div class="contact-item"><span class="contact-item-label">Email</span><span class="contact-item-value">prosper@prosperproduction.com</span></div>
+      <div class="contact-item"><span class="contact-item-label">Email</span><span class="contact-item-value"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="5d2d2f322e2d382f1d2d2f322e2d382f2d2f3239283e29343233733e3230">[email&#160;protected]</a></span></div>
       <div class="contact-item"><span class="contact-item-label">Phone</span><span class="contact-item-value">010-3440-4318</span></div>
     </div>
   </div>
@@ -370,20 +360,17 @@ footer{background:var(--deep);padding:40px 80px;border-top:1px solid rgba(255,25
   </div>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 gsap.registerPlugin(ScrollTrigger);
 
-/* ── INTRO VIDEO → LOADER 시퀀스 ── */
+/* ── INTRO VIDEO → HERO 시퀀스 ── */
 (function(){
-  const introEl   = document.getElementById('introVideoLoader');
-  const introVid  = document.getElementById('introVideo');
-  const mainLoader= document.getElementById('mainLoader');
+  const introEl  = document.getElementById('introVideoLoader');
+  const introVid = document.getElementById('introVideo');
 
-  /* 인트로 영상이 로드되지 않을 경우를 대비한 fallback 타이머 */
   let fallbackTimer = null;
 
-  function dissolveToLoader(){
-    /* intro → 로더 디졸브 (1초) */
+  function dissolveToHero(){
     gsap.to(introEl, {
       opacity: 0,
       duration: 1,
@@ -391,38 +378,19 @@ gsap.registerPlugin(ScrollTrigger);
       onComplete: () => {
         introEl.style.display = 'none';
         introVid.pause();
-        introVid.src = ''; // 메모리 해제
-        startLoader();
+        introVid.src = '';
+        revealHero();
       }
     });
   }
 
-  function startLoader(){
-    /* 로더 페이드인 → 기존 로더 시퀀스 실행 */
-    gsap.set(mainLoader, { opacity: 1, pointerEvents: 'auto' });
-
-    const loaderTL = gsap.timeline();
-    loaderTL
-      .to('.loader-logo',  { opacity:1, duration:1, ease:'power2.out' })
-      .to('.loader-line',  { width:60,  duration:.8, ease:'power2.inOut' }, '-=.3')
-      .to('.loader-text',  { opacity:1, duration:.8 }, '-=.4')
-      .to('.loader',       { opacity:0, duration:.8, delay:.8,
-          onComplete: () => {
-            document.querySelector('.loader').style.display = 'none';
-            revealHero();
-          }
-      });
-  }
-
-  /* 2초 후 디졸브 시작 (영상 길이와 무관하게 정확히 2초) */
   introVid.addEventListener('canplay', function onCanPlay(){
     introVid.removeEventListener('canplay', onCanPlay);
     clearTimeout(fallbackTimer);
-    fallbackTimer = setTimeout(dissolveToLoader, 2000);
+    fallbackTimer = setTimeout(dissolveToHero, 2000);
   });
 
-  /* 영상 로드 실패 또는 지연 시 3초 후 강제 진행 */
-  fallbackTimer = setTimeout(dissolveToLoader, 3000);
+  fallbackTimer = setTimeout(dissolveToHero, 3000);
 })();
 
 function revealHero(){
@@ -532,13 +500,4 @@ document.querySelectorAll('a, button, .portfolio-item, .service-card').forEach(e
 });
 
 /* SMOOTH SCROLL */
-document.querySelectorAll('.nav-links a').forEach(link=>{
-  link.addEventListener('click',(e)=>{
-    e.preventDefault();
-    const target=document.querySelector(link.getAttribute('href'));
-    if(target)target.scrollIntoView({behavior:'smooth'});
-  });
-});
-</script>
-</body>
-</html>
+document.querySelectorAll('.nav-links a').f
