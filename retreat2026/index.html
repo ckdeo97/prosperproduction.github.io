@@ -222,7 +222,7 @@
       <div class="daynav" data-nav="scores"></div>
       <div class="note-help">
         <span>ℹ️</span>
-        <span>악보 이미지는 <b>scores/[곡폴더]/1.jpg, 2.jpg …</b> 순서로 파일만 넣어두면 자동으로 인식돼요.</span>
+        <span><b>scores</b> 폴더에 <b>곡영어이름.jpg</b>로 사진만 올리면 자동으로 인식돼요. (예: wake-up.jpg)</span>
       </div>
       <div id="scores-list"></div>
     </section>
@@ -485,16 +485,24 @@ async function openScoreViewer(slug){
   svImage.hidden = true;
   svEmpty.hidden = true;
 
-  for(let i = 1; i <= 8; i++){
-    const path = `scores/${slug}/${i}.jpg`;
-    const ok = await probeImage(path);
-    if(ok) currentPages.push(path);
-    else break;
+  // 1) 폴더 없이 바로 올린 단일 파일 우선 확인: scores/slug.jpg
+  const flatPath = `scores/${slug}.jpg`;
+  const flatOk = await probeImage(flatPath);
+  if(flatOk){
+    currentPages = [flatPath];
+  } else {
+    // 2) 여러 장인 경우: scores/slug/1.jpg, 2.jpg ...
+    for(let i = 1; i <= 8; i++){
+      const path = `scores/${slug}/${i}.jpg`;
+      const ok = await probeImage(path);
+      if(ok) currentPages.push(path);
+      else break;
+    }
   }
 
   if(currentPages.length === 0){
     svEmpty.hidden = false;
-    svEmpty.textContent = `아직 악보가 없어요.\nscores/${slug}/1.jpg 파일을 추가해주세요.`;
+    svEmpty.textContent = `아직 악보가 없어요.\nscores/${slug}.jpg 파일을 추가해주세요.`;
     svPageIndicator.textContent = '';
   } else {
     showPage(0);
