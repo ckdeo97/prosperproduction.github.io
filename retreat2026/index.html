@@ -10,7 +10,6 @@
   :root{
     --bg:#F1F1F3;
     --ink:#101012;
-    --ink-soft:#1B1B1F;
     --card:#FFFFFF;
     --card-alt:#F5F5F7;
     --text:#151517;
@@ -60,11 +59,11 @@
   .hero .deco{position:absolute;right:-6px;bottom:-10px;opacity:.14;}
   .hero .deco svg{width:76px;height:76px;}
 
-  /* Day chips */
+  /* Day tabs (필터형) */
   .daynav{display:flex;gap:8px;padding:0 18px 14px;overflow-x:auto;scrollbar-width:none;}
   .daynav::-webkit-scrollbar{display:none;}
   .daynav button{
-    flex:none;padding:7px 14px;border-radius:999px;border:1px solid var(--line);
+    flex:none;padding:8px 16px;border-radius:999px;border:1px solid var(--line);
     background:var(--card);color:var(--text-muted);font-family:inherit;font-size:12.5px;font-weight:700;
   }
   .daynav button.on{color:#fff;background:var(--ink);border-color:var(--ink);}
@@ -76,26 +75,24 @@
   .section-title{font-size:12.5px;font-weight:800;color:var(--text-muted);letter-spacing:.04em;
     margin:22px 4px 10px;text-transform:uppercase;}
 
-  /* Service card */
+  /* Service card (더 이상 접었다 폈다 안 함 — Day 탭으로 필터링) */
   .service{
     background:var(--card);border:1px solid var(--line);border-radius:20px;
     margin-bottom:14px;overflow:hidden;
   }
-  .service.current{border-left:3px solid var(--accent);}
   .service-head{
     display:flex;align-items:center;justify-content:space-between;gap:10px;
-    padding:16px 18px;cursor:pointer;
+    padding:16px 18px;border-bottom:1px solid var(--line);
   }
-  .service-head .label{display:flex;align-items:baseline;gap:8px;}
+  .service-head .label{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
   .service-head .day{font-size:11.5px;letter-spacing:.06em;color:var(--text-muted);font-weight:800;}
   .service-head .name{font-size:16px;font-weight:800;}
-  .service-head .count{font-size:12px;color:var(--text-muted);font-weight:600;}
-  .chev{width:9px;height:9px;border-right:2px solid var(--text-muted);border-bottom:2px solid var(--text-muted);
-    transform:rotate(45deg);transition:transform .2s;}
-  .service.expanded .chev{transform:rotate(-135deg);}
-  .service-body{max-height:0;overflow:hidden;transition:max-height .28s ease;}
-  .service.expanded .service-body{max-height:3000px;}
-  .service-list{padding:0 10px 10px;}
+  .service-head .leader{
+    font-size:11.5px;font-weight:700;color:var(--text);background:var(--accent-soft);
+    padding:3px 9px;border-radius:999px;
+  }
+  .service-head .count{font-size:12px;color:var(--text-muted);font-weight:600;flex:none;}
+  .service-list{padding:0 10px 6px;}
 
   /* Song row (conti) */
   .song{border-top:1px solid var(--line);padding:12px 8px;}
@@ -138,9 +135,12 @@
     background:var(--card);border:1px solid var(--line);border-radius:20px;
     padding:16px 18px;margin-bottom:14px;
   }
-  .pl-service-card .head2{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+  .pl-service-card .head2{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:6px;}
   .pl-service-card .head2 .day{font-size:11.5px;color:var(--text-muted);font-weight:800;}
   .pl-service-card .head2 .name{font-size:15px;font-weight:800;margin-left:6px;}
+  .pl-service-card .head2 .leader{
+    font-size:11px;font-weight:700;color:var(--text);background:var(--accent-soft);padding:3px 9px;border-radius:999px;
+  }
   .pl-songrow{display:flex;align-items:center;gap:8px;padding:7px 0;font-size:13.5px;color:var(--text);font-weight:600;border-top:1px solid var(--line);}
   .pl-songrow:first-of-type{border-top:none;}
   .pl-songrow a{margin-left:auto;color:#E24B4B;flex:none;width:26px;height:26px;display:flex;align-items:center;justify-content:center;}
@@ -164,7 +164,7 @@
   .tab svg{width:20px;height:20px;}
   .tab.on{color:var(--ink);}
 
-  /* Fullscreen score viewer (always dark for readability) */
+  /* Fullscreen score viewer */
   .score-viewer{position:fixed;inset:0;background:#000;z-index:50;display:flex;flex-direction:column;}
   .score-viewer[hidden]{display:none;}
   .sv-topbar{
@@ -222,7 +222,7 @@
       <div class="daynav" data-nav="scores"></div>
       <div class="note-help">
         <span>ℹ️</span>
-        <span><b>scores</b> 폴더에 <b>곡영어이름.jpg</b>로 사진만 올리면 자동으로 인식돼요. (예: wake-up.jpg)</span>
+        <span><b>scores</b> 폴더에 <b>곡영어이름.jpg</b>로 사진만 올리면 자동으로 인식돼요. (예: wake-up.jpg / png, jpeg도 인식)</span>
       </div>
       <div id="scores-list"></div>
     </section>
@@ -233,6 +233,7 @@
         <span>▶ 전체곡 이어듣기</span>
         <span class="pl-hero-count"></span>
       </a>
+      <div class="daynav" data-nav="playlist"></div>
       <div id="pl-services"></div>
     </section>
   </main>
@@ -293,58 +294,54 @@ const SONGS = {
 
 /*
   ---------- 연습 코멘트 (팀원 전체 공유) ----------
-  여기에 곡별로 코멘트를 적어두면 모든 사람에게 동일하게 보여요.
-  (localStorage 아님 — 이 파일 자체에 저장되는 방식이라 다시 배포해야 반영됩니다)
-  아래처럼 채워서 저에게 알려주시면 제가 바로 반영해드릴게요.
+  곡별로 코멘트를 적어두면 모든 사람에게 동일하게 보여요. (이 파일 자체에 저장 — 다시 배포해야 반영)
 */
 const NOTES = {
-  'wake-up': '',
-  'jacob-blessing': '',
-  'toward-hometown': '',
-  'pray-together': '',
-  'united-heart': '',
-  'gods-love': '',
-  'presence': '',
-  'elijah-time': '',
-  'heart-worship': '',
-  'way-maker': '',
-  'come-reign': '',
-  'i-am-free': '',
-  'wont-turn-back': '',
-  'as-you-lived': '',
-  'called-me': ''
+  'wake-up': '', 'jacob-blessing': '', 'toward-hometown': '', 'pray-together': '',
+  'united-heart': '', 'gods-love': '', 'presence': '', 'elijah-time': '',
+  'heart-worship': '', 'way-maker': '', 'come-reign': '', 'i-am-free': '',
+  'wont-turn-back': '', 'as-you-lived': '', 'called-me': ''
 };
 
+/*
+  ---------- 예배 목록 + 담당자 ----------
+  leader 값이 비어 있으면 화면엔 "담당 미정"으로 표시됩니다.
+  담당자 알려주시면 여기 채워서 반영해드려요.
+*/
 const SERVICES = [
-  {id:'d1-open',  day:'DAY 1', name:'개회예배',   songs:['wake-up','jacob-blessing','toward-hometown','pray-together']},
-  {id:'d1-night', day:'DAY 1', name:'저녁 집회',  songs:['united-heart','gods-love','toward-hometown','presence','elijah-time','heart-worship','way-maker']},
-  {id:'d2-night', day:'DAY 2', name:'저녁 집회',  songs:['toward-hometown','come-reign','i-am-free','wont-turn-back','way-maker','as-you-lived','called-me']},
-  {id:'d3-close', day:'DAY 3', name:'폐회예배',   songs:['toward-hometown','heart-worship']}
+  {id:'d1-open',  day:'DAY 1', name:'개회예배',  leader:'', songs:['wake-up','jacob-blessing','toward-hometown','pray-together']},
+  {id:'d1-night', day:'DAY 1', name:'저녁 집회', leader:'', songs:['united-heart','gods-love','toward-hometown','presence','elijah-time','heart-worship','way-maker']},
+  {id:'d2-night', day:'DAY 2', name:'저녁 집회', leader:'', songs:['toward-hometown','come-reign','i-am-free','wont-turn-back','way-maker','as-you-lived','called-me']},
+  {id:'d3-close', day:'DAY 3', name:'폐회예배',  leader:'', songs:['toward-hometown','heart-worship']}
 ];
 
 const svg = {
   yt:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12s0-3.4-.4-5a2.7 2.7 0 0 0-1.9-1.9C18 4.7 12 4.7 12 4.7s-6 0-7.7.4A2.7 2.7 0 0 0 2.4 7C2 8.6 2 12 2 12s0 3.4.4 5a2.7 2.7 0 0 0 1.9 1.9C6 19.3 12 19.3 12 19.3s6 0 7.7-.4A2.7 2.7 0 0 0 21.6 17c.4-1.6.4-5 .4-5zM10 15.4V8.6L15.8 12z"/></svg>'
 };
 
+function headHTML(svc){
+  return `<div class="label">
+      <span class="day">${svc.day}</span><span class="name">${svc.name}</span>
+      <span class="leader">${svc.leader ? '담당 ' + svc.leader : '담당 미정'}</span>
+    </div>
+    <span class="count">${svc.songs.length}곡</span>`;
+}
+
 /* ---------- 콘티 탭 렌더 ---------- */
 const contiList = document.getElementById('conti-list');
-SERVICES.forEach((svc, si) => {
+SERVICES.forEach(svc => {
   const card = document.createElement('div');
-  card.className = 'service' + (si === 0 ? ' expanded current' : '');
+  card.className = 'service';
+  card.dataset.day = svc.day;
   card.id = 'conti-' + svc.id;
 
   const head = document.createElement('div');
   head.className = 'service-head';
-  head.innerHTML = `<div class="label"><span class="day">${svc.day}</span><span class="name">${svc.name}</span></div>
-    <div style="display:flex;align-items:center;gap:10px;"><span class="count">${svc.songs.length}곡</span><span class="chev"></span></div>`;
-  head.onclick = () => card.classList.toggle('expanded');
+  head.innerHTML = headHTML(svc);
   card.appendChild(head);
 
-  const body = document.createElement('div');
-  body.className = 'service-body';
   const list = document.createElement('div');
   list.className = 'service-list';
-
   svc.songs.forEach(slug => {
     const s = SONGS[slug];
     const note = NOTES[slug];
@@ -358,31 +355,25 @@ SERVICES.forEach((svc, si) => {
       ${note ? `<div class="note-text"><b>연습 코멘트</b>${note}</div>` : ''}`;
     list.appendChild(row);
   });
-
-  body.appendChild(list);
-  card.appendChild(body);
+  card.appendChild(list);
   contiList.appendChild(card);
 });
 
 /* ---------- 악보 탭 렌더 ---------- */
 const scoresList = document.getElementById('scores-list');
-SERVICES.forEach((svc, si) => {
+SERVICES.forEach(svc => {
   const card = document.createElement('div');
-  card.className = 'service' + (si === 0 ? ' expanded current' : '');
+  card.className = 'service';
+  card.dataset.day = svc.day;
   card.id = 'scores-' + svc.id;
 
   const head = document.createElement('div');
   head.className = 'service-head';
-  head.innerHTML = `<div class="label"><span class="day">${svc.day}</span><span class="name">${svc.name}</span></div>
-    <div style="display:flex;align-items:center;gap:10px;"><span class="count">${svc.songs.length}곡</span><span class="chev"></span></div>`;
-  head.onclick = () => card.classList.toggle('expanded');
+  head.innerHTML = headHTML(svc);
   card.appendChild(head);
 
-  const body = document.createElement('div');
-  body.className = 'service-body';
   const list = document.createElement('div');
   list.className = 'service-list';
-
   svc.songs.forEach(slug => {
     const s = SONGS[slug];
     const row = document.createElement('div');
@@ -391,13 +382,11 @@ SERVICES.forEach((svc, si) => {
     row.querySelector('.openscore').onclick = () => openScoreViewer(slug);
     list.appendChild(row);
   });
-
-  body.appendChild(list);
-  card.appendChild(body);
+  card.appendChild(list);
   scoresList.appendChild(card);
 });
 
-/* ---------- 재생목록 탭 렌더 (실제 유튜브 재생목록 생성) ---------- */
+/* ---------- 재생목록 탭 렌더 ---------- */
 function playlistUrl(slugs){
   const ids = slugs.map(s => SONGS[s].yt).join(',');
   return `https://www.youtube.com/watch_videos?video_ids=${ids}`;
@@ -412,6 +401,7 @@ const plServices = document.getElementById('pl-services');
 SERVICES.forEach(svc => {
   const card = document.createElement('div');
   card.className = 'pl-service-card';
+  card.dataset.day = svc.day;
   const rows = svc.songs.map(slug => {
     const s = SONGS[slug];
     return `<div class="pl-songrow"><span>${s.title}</span><a target="_blank" rel="noopener" href="https://youtu.be/${s.yt}">${svg.yt}</a></div>`;
@@ -419,33 +409,38 @@ SERVICES.forEach(svc => {
   card.innerHTML = `
     <div class="head2">
       <div><span class="day">${svc.day}</span><span class="name">${svc.name}</span></div>
-      <span style="font-size:12px;color:var(--text-muted);font-weight:700;">${svc.songs.length}곡</span>
+      <span class="leader">${svc.leader ? '담당 ' + svc.leader : '담당 미정'}</span>
     </div>
     ${rows}
     <a class="pl-open-btn" target="_blank" rel="noopener" href="${playlistUrl(svc.songs)}">▶ 유튜브에서 이어듣기</a>`;
   plServices.appendChild(card);
 });
 
-/* ---------- Day 퀵네비 ---------- */
-function buildDayNav(container, prefix){
+/* ---------- Day 탭 필터 (아코디언 대신) ---------- */
+function applyDayFilter(listEl, day){
+  [...listEl.children].forEach(card => {
+    card.style.display = card.dataset.day === day ? '' : 'none';
+  });
+}
+function buildDayNav(navEl, listEl){
   const days = [...new Set(SERVICES.map(s => s.day))];
-  container.innerHTML = '';
+  navEl.innerHTML = '';
   days.forEach((d, i) => {
     const btn = document.createElement('button');
     btn.textContent = d;
     if(i === 0) btn.classList.add('on');
     btn.onclick = () => {
-      container.querySelectorAll('button').forEach(b => b.classList.remove('on'));
+      navEl.querySelectorAll('button').forEach(b => b.classList.remove('on'));
       btn.classList.add('on');
-      const first = SERVICES.find(s => s.day === d);
-      const el = document.getElementById(prefix + '-' + first.id);
-      if(el){ el.classList.add('expanded'); el.scrollIntoView({behavior:'smooth', block:'start'}); }
+      applyDayFilter(listEl, d);
     };
-    container.appendChild(btn);
+    navEl.appendChild(btn);
   });
+  applyDayFilter(listEl, days[0]);
 }
-buildDayNav(document.querySelector('[data-nav="conti"]'), 'conti');
-buildDayNav(document.querySelector('[data-nav="scores"]'), 'scores');
+buildDayNav(document.querySelector('[data-nav="conti"]'), contiList);
+buildDayNav(document.querySelector('[data-nav="scores"]'), scoresList);
+buildDayNav(document.querySelector('[data-nav="playlist"]'), plServices);
 
 /* ---------- 탭 전환 ---------- */
 document.querySelectorAll('.tab').forEach(btn => {
@@ -467,6 +462,9 @@ const svPageIndicator = document.getElementById('svPageIndicator');
 let currentPages = [];
 let currentPage = 0;
 
+// 확장자 대소문자/종류 다양하게 올라와도 인식하도록 여러 개 시도
+const EXTS = ['jpg','JPG','jpeg','JPEG','png','PNG','webp','WEBP'];
+
 function probeImage(src){
   return new Promise(resolve => {
     const img = new Image();
@@ -474,6 +472,28 @@ function probeImage(src){
     img.onerror = () => resolve(false);
     img.src = src;
   });
+}
+
+async function findFlat(slug){
+  for(const ext of EXTS){
+    const path = `scores/${slug}.${ext}`;
+    if(await probeImage(path)) return path;
+  }
+  return null;
+}
+
+async function findFolderPages(slug){
+  const pages = [];
+  for(let i = 1; i <= 8; i++){
+    let found = null;
+    for(const ext of EXTS){
+      const path = `scores/${slug}/${i}.${ext}`;
+      if(await probeImage(path)){ found = path; break; }
+    }
+    if(found) pages.push(found);
+    else break;
+  }
+  return pages;
 }
 
 async function openScoreViewer(slug){
@@ -485,19 +505,13 @@ async function openScoreViewer(slug){
   svImage.hidden = true;
   svEmpty.hidden = true;
 
-  // 1) 폴더 없이 바로 올린 단일 파일 우선 확인: scores/slug.jpg
-  const flatPath = `scores/${slug}.jpg`;
-  const flatOk = await probeImage(flatPath);
-  if(flatOk){
-    currentPages = [flatPath];
+  // 1) 폴더 없이 바로 올린 단일 파일 우선 확인: scores/slug.(jpg|png|...)
+  const flat = await findFlat(slug);
+  if(flat){
+    currentPages = [flat];
   } else {
     // 2) 여러 장인 경우: scores/slug/1.jpg, 2.jpg ...
-    for(let i = 1; i <= 8; i++){
-      const path = `scores/${slug}/${i}.jpg`;
-      const ok = await probeImage(path);
-      if(ok) currentPages.push(path);
-      else break;
-    }
+    currentPages = await findFolderPages(slug);
   }
 
   if(currentPages.length === 0){
