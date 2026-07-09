@@ -18,6 +18,7 @@
     --accent:#F0A03D;
     --accent-soft:#FBEBD3;
     --safe-b: env(safe-area-inset-bottom, 0px);
+    --container-max: 560px;
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
   html,body{margin:0;padding:0;height:100%;}
@@ -28,7 +29,16 @@
     min-height:100%;
     -webkit-font-smoothing:antialiased;
   }
-  .app{max-width:560px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;position:relative;}
+  .app{max-width:var(--container-max);margin:0 auto;min-height:100vh;display:flex;flex-direction:column;position:relative;}
+
+  /* 태블릿(가로 700px 이상) 대응 */
+  @media (min-width:700px){
+    :root{ --container-max: 900px; }
+    .service-list{padding:0 16px 12px;}
+    .hero p{font-size:19px;}
+    .song-title,.score-row .title,.pl-songrow{font-size:15.5px;}
+    .service-head .name{font-size:17px;}
+  }
 
   /* Header */
   .topbar{padding:22px 18px 14px;display:flex;align-items:center;gap:12px;}
@@ -153,7 +163,7 @@
 
   /* Tab bar */
   .tabbar{
-    position:fixed;left:0;right:0;bottom:0;max-width:560px;margin:0 auto;
+    position:fixed;left:0;right:0;bottom:0;max-width:var(--container-max);margin:0 auto;
     display:flex;background:rgba(255,255,255,.92);backdrop-filter:blur(14px);
     border-top:1px solid var(--line);padding:10px 8px calc(10px + var(--safe-b));
   }
@@ -183,6 +193,26 @@
   .sv-nav{display:flex;align-items:center;justify-content:center;gap:22px;padding:12px 14px calc(14px + var(--safe-b));background:rgba(0,0,0,.55);}
   .sv-nav button{background:rgba(255,255,255,.1);color:#fff;border:0;width:40px;height:40px;border-radius:50%;font-size:18px;}
   .sv-nav span{color:rgba(255,255,255,.7);font-size:12.5px;min-width:44px;text-align:center;}
+
+  /* iOS는 진짜 Fullscreen API가 안 먹어서, 우리 UI(상/하단 바)를 숨기는 방식으로 "몰입 모드" 구현 */
+  .score-viewer.immersive .sv-topbar,
+  .score-viewer.immersive .sv-nav{
+    opacity:0; pointer-events:none;
+  }
+  .score-viewer.immersive .sv-stage{ padding:0; }
+  .sv-topbar, .sv-nav{ transition:opacity .2s ease; }
+
+  /* 곡/페이지 전환 슬라이드 모션 */
+  @keyframes svSlideNext{
+    from{ transform:translateX(28px); opacity:0; }
+    to{ transform:translateX(0); opacity:1; }
+  }
+  @keyframes svSlidePrev{
+    from{ transform:translateX(-28px); opacity:0; }
+    to{ transform:translateX(0); opacity:1; }
+  }
+  .sv-stage img.anim-next{ animation:svSlideNext .22s ease; }
+  .sv-stage img.anim-prev{ animation:svSlidePrev .22s ease; }
 </style>
 </head>
 <body>
@@ -503,10 +533,10 @@ async function openScoreViewer(queue, idx){
   songQueue = queue;
   songIndex = idx;
   viewer.hidden = false;
-  await loadSong(songIndex, 0);
+  await loadSong(songIndex, 0, null);
 }
 
-async function loadSong(idx, pageToShow){
+async function loadSong(idx, pageToShow, dir){
   songIndex = idx;
   const slug = songQueue[idx];
   const s = SONGS[slug];
@@ -528,15 +558,20 @@ async function loadSong(idx, pageToShow){
     svPageIndicator.textContent = `${idx+1} / ${songQueue.length}`;
   } else {
     const pageIndex = pageToShow === 'last' ? currentPages.length - 1 : (pageToShow || 0);
-    showPage(pageIndex);
+    showPage(pageIndex, dir);
   }
 }
 
-function showPage(i){
+function showPage(i, dir){
   currentPage = i;
   resetZoom();
   svImage.hidden = false;
   svEmpty.hidden = true;
+  if(dir){
+    svImage.classList.remove('anim-next','anim-prev');
+    void svImage.offsetWidth; // 리플로우로 애니메이션 재시작
+    svImage.classList.add(dir === 'next' ? 'anim-next' : 'anim-prev');
+  }
   svImage.src = currentPages[i];
   svPageIndicator.textContent = currentPages.length > 1
     ? `${songIndex+1}/${songQueue.length} · 페이지 ${i+1}/${currentPages.length}`
@@ -546,26 +581,35 @@ function showPage(i){
 // 다음/이전: 같은 곡 안에 페이지가 더 있으면 페이지 이동, 없으면 다음/이전 곡으로 이동
 async function goNext(){
   if(currentPage < currentPages.length - 1){
-    showPage(currentPage + 1);
+    showPage(currentPage + 1, 'next');
   } else if(songIndex < songQueue.length - 1){
-    await loadSong(songIndex + 1, 0);
+    await loadSong(songIndex + 1, 0, 'next');
   }
 }
 async function goPrev(){
   if(currentPage > 0){
-    showPage(currentPage - 1);
+    showPage(currentPage - 1, 'prev');
   } else if(songIndex > 0){
-    await loadSong(songIndex - 1, 'last');
+    await loadSong(songIndex - 1, 'last', 'prev');
   }
 }
 
 document.getElementById('svClose').onclick = () => {
   viewer.hidden = true;
+  viewer.classList.remove('immersive');
+  document.getElementById('svFull').textContent = '전체화면';
   if(document.fullscreenElement) document.exitFullscreen();
 };
 document.getElementById('svFull').onclick = () => {
-  if(!document.fullscreenElement) viewer.requestFullscreen?.();
-  else document.exitFullscreen();
+  const isImmersive = viewer.classList.toggle('immersive');
+  document.getElementById('svFull').textContent = isImmersive ? '보기 전환' : '전체화면';
+  // iOS 사파리는 일반 요소의 Fullscreen API를 지원하지 않아서 위 immersive 모드가 실제 동작함.
+  // 지원하는 브라우저(안드로이드 크롬 등)에서는 추가로 진짜 전체화면도 함께 시도.
+  if(isImmersive && viewer.requestFullscreen){
+    viewer.requestFullscreen().catch(() => {});
+  } else if(!isImmersive && document.fullscreenElement){
+    document.exitFullscreen();
+  }
 };
 document.getElementById('svPrev').onclick = goPrev;
 document.getElementById('svNext').onclick = goNext;
